@@ -1,0 +1,47 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static %}
+{% block content %}
+  <div class="eej-admin-welcome module">
+    <h2 class="fw-600 mb-2">
+      <i class="fa fa-toolbox me-1 text-primary"></i>
+      Bienvenue {{ request.user.first_name|default:request.user.username }} 👋
+    </h2>
+    <p class="intro mb-3">Gestion centralisée des contenus, événements, implantations et messages.</p>
+    <div class="quick-actions d-flex flex-wrap gap-2 small mb-2">
+      <a class="btn-action" href="{% url 'admin:website_newsitem_add' %}"><i class="fa fa-plus"></i> Actualité</a>
+      <a class="btn-action" href="{% url 'admin:website_newsitem_add' %}?type=event"><i class="fa fa-calendar-plus"></i> Événement</a>
+      <a class="btn-action" href="{% url 'admin:website_newsitem_changelist' %}"><i class="fa fa-newspaper"></i> Liste contenus</a>
+      <a class="btn-action" href="{% url 'admin:website_center_changelist' %}"><i class="fa fa-location-dot"></i> Centres</a>
+      <a class="btn-action" href="{% url 'admin:website_contactmessage_changelist' %}"><i class="fa fa-inbox"></i> Messages</a>
+  {% if request.user.is_superuser %}
+  <a class="btn-action" href="/dashboard/"><i class="fa fa-chart-line"></i> Dashboard interne</a>
+  <a class="btn-action" href="/dashboard/donations/"><i class="fa fa-heart"></i> Dons</a>
+  {% endif %}
+    </div>
+  </div>
+  <div class="row" style="display:grid; gap:1.25rem; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); margin-bottom:2rem;">
+    <div class="module mini-panel">
+      <h3 class="h6 fw-bold d-flex align-items-center gap-2 mb-3"><i class="fa fa-layer-group text-primary"></i> Contenus</h3>
+      <ul class="list-unstyled small mb-0">
+        <li><a href="{% url 'admin:website_newsitem_changelist' %}"><i class="fa fa-angle-right me-1"></i>Toutes les actualités / événements</a></li>
+        <li><a href="{% url 'admin:website_newsitem_add' %}"><i class="fa fa-angle-right me-1"></i>Ajouter une actualité</a></li>
+        <li><a href="{% url 'admin:website_newsitem_add' %}?type=event"><i class="fa fa-angle-right me-1"></i>Ajouter un événement</a></li>
+        <li><a href="{% url 'admin:website_category_changelist' %}"><i class="fa fa-angle-right me-1"></i>Catégories</a></li>
+      </ul>
+    </div>
+    <div class="module mini-panel">
+      <h3 class="h6 fw-bold d-flex align-items-center gap-2 mb-3"><i class="fa fa-location-dot text-primary"></i> Implantations</h3>
+      <ul class="list-unstyled small mb-0">
+        <li><a href="{% url 'admin:website_center_changelist' %}"><i class="fa fa-angle-right me-1"></i>Centres</a></li>
+        <li><a href="{% url 'admin:website_center_add' %}"><i class="fa fa-angle-right me-1"></i>Ajouter un centre</a></li>
+      </ul>
+    </div>
+    <div class="module mini-panel">
+      <h3 class="h6 fw-bold d-flex align-items-center gap-2 mb-3"><i class="fa fa-inbox text-primary"></i> Messages</h3>
+      <ul class="list-unstyled small mb-0">
+        <li><a href="{% url 'admin:website_contactmessage_changelist' %}"><i class="fa fa-angle-right me-1"></i>Tous les messages</a></li>
+      </ul>
+    </div>
+  </div>
+  {{ block.super }}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'website/base.html' %}
+{% block content %}
+<div class="py-3">
+  <h1 class="h5">FedaPay Debug</h1>
+  <ul class="small list-unstyled">
+    <li>Public key: <code>{{ public_key|default:'—' }}</code></li>
+    <li>Mode: <strong>{{ mode|default:'—' }}</strong></li>
+    <li>Webhook secret configuré: <strong>{{ webhook_secret_set|yesno:"oui,non" }}</strong></li>
+  </ul>
+  <p class="text-muted small">Assurez-vous que la clé publique correspond bien à votre environnement (sandbox/live) et que le domaine est autorisé dans FedaPay (Applications).</p>
+</div>
+{% endblock %}

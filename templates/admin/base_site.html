@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block title %}Administration EEJ | {% if title %}{{ title }}{% endif %}{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Xx7..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="{% static 'css/admin_custom.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div class="eej-admin-brand d-flex align-items-center">
+  <img src="/static/logo.jpg" alt="EEJ" class="logo rounded-circle me-2">
+  <h1 id="site-name" class="m-0 fw-bold"><a href="{% url 'admin:index' %}">EEJ – Administration</a></h1>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+  <div class="eej-top-links">
+    <a href="/" target="_blank" class="ext-link">← Voir le site</a>
+    <a href="/dashboard/" target="_blank" class="ext-link">Dashboard interne</a>
+  </div>
+{% endblock %}

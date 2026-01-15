@@ -1,0 +1,79 @@
+{% extends 'website/base.html' %}
+{% block content %}
+<div class="py-5 text-center">
+  <h1 class="h5 mb-2">Paiement</h1>
+  <p class="text-muted small mb-2">Finalisez votre don en toute sécurité.</p>
+  <p class="small">Montant: <strong>{{ amount }}</strong> {{ currency }}</p>
+  <style>
+    /* Agrandit la zone d’embed pour limiter le scroll interne du widget */
+    #fedapay-embed {
+      max-width: 680px;
+      margin: 0 auto;
+      height: 780px; /* hauteur de base confortable */
+    }
+    #fedapay-embed iframe {
+      width: 100% !important;
+      height: 100% !important; /* occupe toute la hauteur définie */
+      min-height: 720px; /* sécurité pour petits écrans */
+      border: 0;
+      border-radius: 10px;
+    }
+    @media (max-width: 576px){
+      #fedapay-embed { height: 860px; max-width: 100%; }
+    }
+  </style>
+  <div id="fedapay-embed"></div>
+  <div class="mt-3">
+    <button id="pay-btn" class="btn btn-outline-primary btn-sm">Ouvrir la fenêtre de paiement</button>
+  </div>
+</div>
+<script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
+<script>
+  (function(){
+    const pub = '{{ public_key|default:""|escapejs }}';
+    const env = '{{ environment|default:"sandbox"|escapejs }}';
+    const amount = Number('{{ amount|default:"1000"|escapejs }}');
+    const currency = '{{ currency|default:"XOF"|escapejs }}';
+    const description = '{{ description|default:"Don ONG EEJ"|escapejs }}';
+    const eej_ref = '{{ metadata_ref|escapejs }}';
+    const successUrl = '{{ success_url|escapejs }}';
+    const cancelUrl = '{{ cancel_url|escapejs }}';
+
+    if(!pub){
+      console.warn('FedaPay public key manquante');
+      const warn = document.createElement('div');
+      warn.className = 'alert alert-warning small';
+      warn.textContent = "Configuration manquante: clé publique FedaPay. Contactez l'administrateur.";
+      document.querySelector('.py-5')?.prepend(warn);
+    }
+    // Embedded widget
+    let widget = FedaPay.init({
+      public_key: pub,
+      environment: env,
+      transaction: {
+        amount: amount,
+        description: description,
+        custom_metadata: { eej_ref: eej_ref },
+      },
+      customer: {},
+      currency: { iso: currency },
+      container: '#fedapay-embed',
+      onComplete: function(payload){
+        // payload contient l'état: success/failure/canceled
+        try{
+          if(payload && payload.status === 'success'){
+            window.location.assign(successUrl);
+          } else {
+            window.location.assign(cancelUrl);
+          }
+        }catch(e){ window.location.assign(cancelUrl); }
+      }
+    });
+
+    // Fallback: open modal on button click
+    document.getElementById('pay-btn')?.addEventListener('click', function(){
+      try { widget.open(); } catch(e){}
+    });
+  })();
+</script>
+{% endblock %}

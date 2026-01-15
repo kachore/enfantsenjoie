@@ -1,0 +1,58 @@
+{% extends 'website/base.html' %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container">
+    <h1 class="h3 fw-bold mb-2">Recherche</h1>
+    <p class="lead mb-0">Trouvez une actualité ou un événement.</p>
+  </div>
+</section>
+{% endblock %}
+{% block content %}
+  <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="50">
+    <div class="col-lg-8">
+      <form method="get" class="input-group mb-4 shadow-sm">
+        <input type="text" name="q" class="form-control" placeholder="Mot-clé (ex: santé, atelier...)" value="{{ query }}">
+        <button class="btn btn-gradient" type="submit"><i class="fa fa-search me-1"></i>Rechercher</button>
+      </form>
+      {% if query and results %}
+        <p class="small text-muted mb-3">{{ results|length }} résultat(s) pour "{{ query }}" :</p>
+        <div class="row g-4">
+          {% for r in results %}
+            <div class="col-md-6">
+              <div class="news-card h-100 position-relative overflow-hidden rounded-4 border">
+                <div class="ratio ratio-16x9 position-relative">
+                  {% if r.image %}
+                    <img src="{{ r.image }}" alt="{{ r.title }}" loading="lazy" class="w-100 h-100 object-fit-cover">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 fade-overlay" style="background:linear-gradient(to top,rgba(0,0,0,.20),rgba(0,0,0,.02)); mix-blend-mode:normal;"></div>
+                  {% elif r.media_type == 'image' and r.media_url %}
+                    <img src="{{ r.media_url }}" alt="{{ r.title }}" loading="lazy" class="w-100 h-100 object-fit-cover">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 fade-overlay" style="background:linear-gradient(to top,rgba(0,0,0,.20),rgba(0,0,0,.02)); mix-blend-mode:normal;"></div>
+                  {% elif r.media_type == 'video' and r.media_url %}
+                    <video class="w-100 h-100 object-fit-cover" preload="metadata" muted playsinline>
+                      <source src="{{ r.media_url }}" type="video/mp4">
+                      Votre navigateur ne supporte pas la lecture vidéo.
+                    </video>
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted small">Aucun visuel</div>
+                  {% endif %}
+                  <span class="fw-normal position-absolute m-3">{{ r.type|title }}</span>
+                </div>
+                <div class="p-3">
+                  <h5 class="fw-semibold fs-6 mb-2 line-clamp-2" style="min-height:2.6em;">{{ r.title }}</h5>
+                  <p class="tiny text-muted mb-2"><i class="fa fa-calendar me-1"></i>{{ r.date|date:"d/m/Y" }}</p>
+                  <a href="/actualites/{{ r.slug }}/" class="stretched-link"></a>
+                  <div class="d-flex">
+                    <a href="/actualites/{{ r.slug }}/" class="btn btn-sm btn-outline-primary">Lire</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% elif query %}
+        <p class="text-muted">Aucun résultat pour "{{ query }}".</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+

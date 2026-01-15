@@ -1,0 +1,94 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% block title %}Connexion | {{ block.super }}{% endblock %}
+{% block content %}
+<div class="login-panel">
+  <div class="login-card elevate">
+    <div class="login-head">
+      <div class="login-logo-wrap">
+        <img src="/static/logo.jpg" alt="EEJ" class="rounded-circle shadow-sm" width="72" height="72">
+      </div>
+      <div class="login-head-text">
+        <h1 class="login-title">Espace Administration</h1>
+        <p class="login-sub">Accès sécurisé aux outils internes</p>
+      </div>
+    </div>
+    <div class="login-body">
+    {% if form.errors %}
+      <div class="alert alert-danger small" role="alert"><i class="fa fa-triangle-exclamation me-1"></i> Identifiants invalides.</div>
+    {% endif %}
+    {% if request.login_locked %}
+      <div class="alert alert-warning small mb-2" role="alert">
+        <i class="fa fa-lock me-1"></i> Compte temporairement verrouillé après trop de tentatives ({{ request.login_fail_count }}). Réessayez dans <span id="lock-countdown"></span>.
+      </div>
+    {% elif request.login_fail_count and request.login_fail_count > 0 %}
+      <div class="small text-warning mb-2">
+        <i class="fa fa-shield-halved me-1"></i>
+        Tentatives échouées : {{ request.login_fail_count }}{% if request.login_fail_count >= 2 %} – Vérifiez votre clavier (Caps Lock ?) ou réinitialisez votre mot de passe.{% endif %}
+      </div>
+    {% endif %}
+    {% if user.is_authenticated %}
+      <p class="small">{% trans 'Vous êtes déjà connecté.' %}</p>
+    {% endif %}
+  <form method="post" id="login-form" novalidate class="login-form-enhanced" action="{% url 'admin:login' %}">
+      {% csrf_token %}
+      <div class="form-field">
+        <label class="form-label small fw-semibold" for="id_username">Nom d'utilisateur</label>
+        <div class="position-relative input-icon-group input-shell">
+          {{ form.username }}
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-label small fw-semibold" for="id_password">Mot de passe</label>
+        <div class="position-relative input-icon-group input-shell">
+          {{ form.password }}
+          {% if request.login_locked %}
+          <div class="lock-overlay"></div>
+          {% endif %}
+          <button type="button" class="toggle-password" aria-label="Afficher / masquer le mot de passe"><i class="fa fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between align-items-center small form-meta">
+        <div class="text-muted"><i class="fa fa-shield-halved me-1"></i>  Session protégée</div>
+        </div>
+      <div class="d-grid action-row">
+  <button type="submit" class="button" {% if request.login_locked %}disabled{% endif %}><i class="fa fa-right-to-bracket me-1"></i> Se connecter</button>
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+    </form>
+    <div class="login-footer text-center">
+      <a href="/" class="small back-link"><i class="fa fa-arrow-left me-1"></i>Retour au site</a>
+    </div>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    const pwdField = document.getElementById('id_password');
+    const toggleBtn = document.querySelector('.toggle-password');
+    if(pwdField && toggleBtn){
+      toggleBtn.addEventListener('click', function(){
+        const isText = pwdField.getAttribute('type') === 'text';
+        pwdField.setAttribute('type', isText ? 'password' : 'text');
+        this.innerHTML = '<i class="fa '+ (isText ? 'fa-eye' : 'fa-eye-slash') +'"></i>';
+      });
+    }
+    const userField = document.getElementById('id_username');
+    if(userField && !userField.hasAttribute('autofocus')){ userField.focus(); }
+    // Countdown lock
+  const countdownEl = document.getElementById('lock-countdown');
+  const remaining = parseInt('{{ request.login_lock_remaining|default:0 }}');
+    if(countdownEl && remaining > 0){
+      let secs = remaining;
+      const fmt = s => {
+        const m = Math.floor(s/60); const r = s%60; return m>0 ? m+ 'm ' + r + 's' : r + 's';
+      };
+      countdownEl.textContent = fmt(secs);
+      const iv = setInterval(()=>{ secs--; if(secs<=0){ clearInterval(iv); window.location.reload(); } else { countdownEl.textContent = fmt(secs); } },1000);
+      // Désactiver inputs quand verrouillé
+      const form = document.getElementById('login-form');
+      if(form){ form.querySelectorAll('input').forEach(i=> i.disabled = true); }
+    }
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,565 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-2">À propos</h1>
+    <p class="lead mb-0">Enfants En Joie — Investir dans la dignité, l’égalité et le potentiel humain.</p>
+  </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script>
+  (function(){
+    const sections = document.querySelectorAll('.about-section');
+    const sideLinks = document.querySelectorAll('.about-side-nav a, .about-mobile-nav a');
+    const linkMap = {};
+    sideLinks.forEach(l=>{ linkMap[l.getAttribute('href').replace('#','')] = l; });
+
+    let lastClickedId = null;
+    function setActive(id){
+      if(!id) return;
+      sideLinks.forEach(l=> l.classList.remove('active'));
+      if(linkMap[id]) linkMap[id].classList.add('active');
+      lastClickedId = id;
+    }
+
+    // Scrollspy via IntersectionObserver
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          // Ne change l’état actif que si ce n’est pas le dernier clic (évite le flash)
+          if(lastClickedId !== entry.target.id){
+            setActive(entry.target.id);
+          }
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: [0, .25, .5, 1] });
+
+    sections.forEach(sec=> observer.observe(sec));
+
+    // Smooth scroll sur clic de lien d'ancre + activation immédiate
+    sideLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        const hash = link.getAttribute('href');
+        if(hash && hash.startsWith('#')){
+          e.preventDefault();
+          // Active le lien cliqué et mémorise l’id
+          setActive(hash.replace('#',''));
+          const target = document.querySelector(hash);
+          if(target){
+            target.scrollIntoView({behavior:'smooth'});
+            history.replaceState(null,'',hash);
+          }
+        }
+      });
+    });
+
+    // État initial: activer le lien selon le hash ou par défaut la première section
+    window.addEventListener('load', () => {
+      if(location.hash && document.querySelector(location.hash)){
+        setActive(location.hash.replace('#',''));
+      } else if(sections[0]){
+        setActive(sections[0].id);
+      }
+    });
+
+    // KPIs: animation de compteur à l'apparition
+    const kpis = document.querySelectorAll('.kpi .metric-value');
+    if(kpis.length){
+      const speed = 800; // durée approx en ms
+      const ease = t => 1 - Math.pow(1 - t, 3);
+      const seen = new WeakSet();
+      const runCount = (el)=>{
+        if(seen.has(el)) return; seen.add(el);
+        const target = parseInt(el.getAttribute('data-target')||'0',10);
+        const start = 0; const startTime = performance.now();
+        const step = (now)=>{
+          const p = Math.min(1, (now - startTime)/speed);
+          const val = Math.floor(start + (target - start) * ease(p));
+          el.textContent = val.toLocaleString('fr-FR');
+          if(p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      };
+      const obsKpi = new IntersectionObserver(entries => {
+        entries.forEach(e=>{ if(e.isIntersecting) runCount(e.target.querySelector('.metric-value')); });
+      }, { rootMargin: '-20% 0px -20% 0px', threshold: .4 });
+      document.querySelectorAll('.kpi').forEach(k => obsKpi.observe(k));
+    }
+  })();
+</script>
+{% endblock %}
+{% block content %}
+
+<div class="about-layout row gx-lg-5">
+  <!-- Side Nav (desktop) -->
+  <div class="col-lg-2 d-none d-lg-block">
+    <nav class="about-side-nav position-sticky" style="top:90px">
+      <ul class="list-unstyled m-0">
+  <li><a href="#raison">Raison d’être</a></li>
+        <li><a href="#valeurs">Valeurs</a></li>
+  <li><a href="#etapes">Étapes clés</a></li>
+  <li><a href="#evenements">Événements</a></li>
+        <li><a href="#programmes">Programmes</a></li>
+  <li><a href="#impact">Impact</a></li>
+        <li><a href="#gouvernance">Gouvernance & Partenariats</a></li>
+        <li><a href="#action" class="accent">Agir</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="col-lg-9">
+    <!-- Nav mobile (sticky + défilable) -->
+    <div class="about-mobile-nav d-lg-none mb-4">
+      <div class="scroll-wrapper">
+        <a href="#raison">Raison</a>
+        <a href="#valeurs">Valeurs</a>
+        <a href="#etapes">Étapes</a>
+  <a href="#programmes">Programmes</a>
+  <a href="#impact">Impact</a>
+        <a href="#gouvernance">Gouvernance</a>
+        <a href="#action" class="accent">Agir</a>
+      </div>
+    </div>
+    <!-- Contexte & Vision -->
+    <section id="raison" class="about-section" data-aos="fade-up" aria-labelledby="raison-title">
+      <div class="row gy-5 align-items-start">
+        <div class="col-lg-7">
+          <h2 id="raison-title" class="section-title mb-3">Raison d’être</h2>
+          <!--<p class="mb-3">Nous existons pour réduire les inégalités d’accès aux savoirs, à la santé préventive, aux opportunités économiques et à la participation citoyenne des enfants, jeunes et femmes. Notre action s’inscrit dans une approche systémique : agir sur plusieurs leviers crée des boucles de progrès durables.</p>-->
+          <p class="mb-3 text-justify">Conscient de sa vision et de sa mission, l’ONG EEJ se fixe comme objectif général pour les années à venir « Contribuer à l’amélioration durable des conditions de vie des enfants, des jeunes et des femmes au Bénin, à travers la promotion de l’éducation, de la santé et du bien-être, le renforcement de leur autonomisation socio-économique, la protection de leurs droits, la préservation de l’environnement et la résilience organisationnelle ».</p>
+          <div class="row g-3 small">
+            <div class="col-sm-6">
+              <div class="p-3 h-100 rounded-4 border bg-white shadow-sm">
+                <h6 class="fw-semibold mb-2"><i class="fa fa-eye text-primary me-1"></i>Vision</h6>
+                <p class="mb-0">Promouvoir un monde où chaque enfant, jeune et femme vit dans la dignité, bénéficie d’opportunités égales et développe son plein potentiel dans un environnement sain et équitable.</p>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="p-3 h-100 rounded-4 border bg-white shadow-sm">
+                <h6 class="fw-semibold mb-2"><i class="fa fa-bullseye text-accent me-1"></i>Mission</h6>
+                <p class="mb-0">Contribuer au bien-être des enfants, des jeunes et des femmes à travers des actions éducatives, sanitaires, environnementales et économiques, tout en défendant leurs droits et en favorisant leur autonomisation pour un développement durable et inclusif.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5" data-aos="fade-left">
+          <div class="module mb-4">
+            <h4 class="h6 text-uppercase fw-bold mb-3 module-title">Implantations</h4>
+            <div class="row g-3">
+              <p class="text-muted small text-center">Nous intervenons dans les douzes (12) département du Bénin.</p>
+              {% for center in centers %}
+                <div class="col-lg-6">
+                  <div class="d-flex align-items-start about-list-item">
+                    <div class="me-2 text-primary icon-badge"><i class="fa fa-location-dot"></i></div>
+                    <div>
+                      <strong>{{ center.city }}</strong><br>
+                      <!-- <small class="text-muted">{{ center.address|default:"Adresse à compléter" }}</small><br> -->
+                      {% if center.contact %}<small>{{ center.contact }}</small>{% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% empty %}
+                <p class="text-muted small">Centres à ajouter par l'admin.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projet de siège (3D) -->
+    {% if building_gallery %}
+    <section id="batiment" class="about-section" data-aos="fade-up" aria-labelledby="batiment-title">
+      <h2 id="batiment-title" class="section-title mb-3">Projet de siège</h2>
+      <div class="mb-2 small text-muted">Visualisation du futur siège de l’ONG EEJ.</div>
+      <div class="news-hero mb-3">
+        <div id="building3D" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+          <div class="carousel-inner">
+            {% for m in building_gallery %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm">
+                {% if m.type == 'image' %}
+                  <img src="{% static m.url %}" class="w-100 h-100 object-fit-cover" alt="Plan 3D {{ forloop.counter }}" loading="lazy" decoding="async">
+                {% elif m.type == 'video' %}
+                  <video class="w-100 h-100 object-fit-cover" controls preload="metadata">
+                    <source src="{% static m.url %}" type="video/mp4">
+                  </video>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% if building_gallery|length > 1 %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#building3D" data-bs-slide="prev" aria-label="Précédent">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#building3D" data-bs-slide="next" aria-label="Suivant">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+          </button>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- Valeurs -->
+    <section id="valeurs" class="about-section" data-aos="fade-up" aria-labelledby="valeurs-title">
+      <h2 id="valeurs-title" class="section-title mb-3">Nos valeurs</h2>
+      <div class="row g-3 small">
+        <div class="col-6 col-md-4">
+          <div class="p-3 h-100 rounded-4 border bg-white value-box">
+            <h6 class="mb-1 fw-semibold"><i class="fa fa-scale-balanced text-primary me-1"></i>Solidarité</h6>
+            <p class="mb-0 tiny text-muted">Mettre la fraternité et l’entraide au cœur de toutes les actions en faveur des enfants, des jeunes et des femmes.</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="p-3 h-100 rounded-4 border bg-white value-box">
+            <h6 class="mb-1 fw-semibold"><i class="fa fa-people-carry-box text-primary me-1"></i>Inclusion</h6>
+            <p class="mb-0 tiny text-muted">Garantir l’égalité des chances et l’accès équitable aux opportunités, sans discrimination liée au genre, au handicap, à l’âge ou à la condition sociale.</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="p-3 h-100 rounded-4 border bg-white value-box">
+            <h6 class="mb-1 fw-semibold"><i class="fa fa-hands-holding-child text-primary me-1"></i>Protection</h6>
+            <p class="mb-0 tiny text-muted">Protéger les droits fondamentaux de chaque individu et promouvoir des relations basées sur la considération mutuelle.</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="p-3 h-100 rounded-4 border bg-white value-box">
+            <h6 class="mb-1 fw-semibold"><i class="fa fa-recycle text-primary me-1"></i>Durabilité</h6>
+            <p class="mb-0 tiny text-muted">Inscrire toutes les interventions dans une perspective de préservation de l’environnement et de pérennité des acquis.</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="p-3 h-100 rounded-4 border bg-white value-box">
+            <h6 class="mb-1 fw-semibold"><i class="fa fa-lightbulb text-primary me-1"></i>Innovation</h6>
+            <p class="mb-0 tiny text-muted">Développer des solutions créatives et adaptées aux défis éducatifs, sociaux, économiques et environnementaux.</p>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="p-3 h-100 rounded-4 border bg-white value-box">
+            <h6 class="mb-1 fw-semibold"><i class="fa fa-seedling text-primary me-1"></i>Impact</h6>
+            <p class="mb-0 tiny text-muted">Valoriser la synergie avec les communautés, les ONG sœurs et les partenaires techniques et financiers pour maximiser l’impact collectif.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="etapes" class="about-section" data-aos="fade-up" aria-labelledby="etapes-title">
+      <h2 id="etapes-title" class="section-title mb-3">Étapes clés</h2>
+      <ul class="timeline list-unstyled small mb-0">
+        <li><span class="t-badge">2019</span> Fondation et premiers ateliers communautaires.</li>
+        <li><span class="t-badge">2021</span> Lancement programme santé & prévention.</li>
+        <li><span class="t-badge">2023</span> Extension éducation numérique jeunes filles.</li>
+        <li><span class="t-badge">2024</span> Consolidation partenariats & centres régionaux.</li>
+      </ul>
+    </section>
+
+    <!-- Événements (pleine largeur) -->
+    <section id="evenements" class="about-section" data-aos="fade-up" aria-labelledby="evenements-title">
+      <h2 id="evenements-title" class="section-title mb-3">Prochains événements</h2>
+      <div class="events-panel p-3 p-md-4 rounded-4 border bg-white">
+        <ul class="list-unstyled mb-0 small about-list">
+          {% for event in events %}
+            <li class="mb-2 event-item position-relative"><i class="fa fa-calendar me-2 text-primary"></i>
+              <a href="{{ event.get_absolute_url }}" class="text-decoration-none event-text stretched-link">{{ event.title }}</a>
+              {% if event.event_start and event.event_end %}
+                <span class="text-muted">— {{ event.event_start|date:"d/m/Y H:i" }} → {{ event.event_end|date:"d/m/Y H:i" }}</span>
+              {% elif event.event_start %}
+                <span class="text-muted">— {{ event.event_start|date:"d/m/Y H:i" }}</span>
+              {% elif event.date_event %}
+                <span class="text-muted">— {{ event.date_event|date:"d/m/Y H:i" }}</span>
+              {% endif %}
+            </li>
+          {% empty %}
+            <li class="text-muted">Aucun événement.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Programmes -->
+    <section id="programmes" class="about-section" data-aos="fade-up" aria-labelledby="programmes-title">
+      <h2 id="programmes-title" class="section-title mb-3">Programmes phares</h2>
+      <div class="accordion accordion-flush" id="programmesAccordion">
+        <!-- Axe 1 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAxe1">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAxe1" aria-expanded="false" aria-controls="collapseAxe1">
+              <span class="fw-semibold me-2">Axe 1&nbsp;:</span> Renforcement de l'autonomisation socio‑économique des femmes et des jeunes
+            </button>
+          </h2>
+          <div id="collapseAxe1" class="accordion-collapse collapse" aria-labelledby="headingAxe1" data-bs-parent="#programmesAccordion">
+            <div class="accordion-body small">
+              <h6 class="fw-semibold mb-1">Objectif stratégique 1.1</h6>
+              <p class="tiny text-muted">Accroître de 30% le nombre de femmes et jeunes filles formées en entrepreneuriat et leadership d'ici 2028.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>1.1.1. Mettre en place des programmes pratiques en entrepreneuriat, leadership, éducation financière et confiance en soi.</li>
+                <li>1.1.2. Développer un réseau de mentors/coachs multi‑secteurs, avec plateforme de mentorat en ligne (Programme Femmes & Technologies).</li>
+                <li>1.1.3. Initier des incubateurs d’entrepreneuriat féminin et des ateliers de résilience économique.</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 1.2</h6>
+              <p class="tiny text-muted">Soutenir la création et le développement de 50 AGR durables.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>1.2.1. Mettre en place un fonds de soutien / micro‑financement pour projets économiques de femmes et jeunes.</li>
+                <li>1.2.2. Renforcer les formations techniques et managériales en artisanat, agroalimentaire, production et commercialisation (Programme Savoir‑faire & revenus).</li>
+                <li>1.2.3. Créer/soutenir des coopératives et plateformes locales de vente pour faciliter l’accès au marché.</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 1.3</h6>
+              <p class="tiny text-muted">Renforcer les compétences numériques et technologiques de 200 femmes et jeunes filles.</p>
+              <ul class="tiny ps-3 mb-0 check-list">
+                <li>1.3.1. Formations en compétences numériques de base, innovation digitale et outils pour l’entrepreneuriat (Extension Numérique & Innovation).</li>
+                <li>1.3.2. Créer des espaces numériques communautaires (cyber‑espaces, clubs TIC, plateforme e‑learning).</li>
+                <li>1.3.3. Nouer des partenariats avec entreprises tech et institutions pour l’accès aux certifications numériques.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Axe 2 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAxe2">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAxe2" aria-expanded="false" aria-controls="collapseAxe2">
+              <span class="fw-semibold me-2">Axe 2&nbsp;:</span> Promotion de l'éducation, de la santé et du bien‑être
+            </button>
+          </h2>
+          <div id="collapseAxe2" class="accordion-collapse collapse" aria-labelledby="headingAxe2" data-bs-parent="#programmesAccordion">
+            <div class="accordion-body small">
+              <h6 class="fw-semibold mb-1">Objectif stratégique 2.1</h6>
+              <p class="tiny text-muted">Étendre le soutien scolaire «&nbsp;La Voix de l'Espoir&nbsp;» à 5 nouvelles communautés.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>2.1.1. Identifier/mobiliser de nouvelles communautés avec autorités locales et scolaires.</li>
+                <li>2.1.2. Former des volontaires locaux pour animer les sessions.</li>
+                <li>2.1.3. Mettre en place/équiper des espaces éducatifs (bibliothèques, clubs) et promouvoir «&nbsp;À la découverte d’un Métier&nbsp;».</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 2.2</h6>
+              <p class="tiny text-muted">Renforcer la SSR auprès de 5000 jeunes.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>2.2.1. Campagnes massives via écoles, clubs, radios locales, réseaux sociaux (Octobre Rose, Novembre Bleu).</li>
+                <li>2.2.2. Former des pairs éducateurs et animateurs communautaires.</li>
+                <li>2.2.3. Partenariats avec structures de santé pour accès aux services adaptés.</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 2.3</h6>
+              <p class="tiny text-muted">Développer des programmes de bien‑être holistique touchant 1000 enfants et adultes.</p>
+              <ul class="tiny ps-3 mb-0 check-list">
+                <li>2.3.1. Activités sportives, artistiques et culturelles régulières.</li>
+                <li>2.3.2. Ateliers nutrition, gestion du stress et santé mentale (Programme Santé intégrale).</li>
+                <li>2.3.3. Clubs communautaires de bien‑être et d’expression.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Axe 3 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAxe3">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAxe3" aria-expanded="false" aria-controls="collapseAxe3">
+              <span class="fw-semibold me-2">Axe 3&nbsp;:</span> Protection des droits et valorisation culturelle
+            </button>
+          </h2>
+          <div id="collapseAxe3" class="accordion-collapse collapse" aria-labelledby="headingAxe3" data-bs-parent="#programmesAccordion">
+            <div class="accordion-body small">
+              <h6 class="fw-semibold mb-1">Objectif stratégique 3.1</h6>
+              <p class="tiny text-muted">Renforcer les mécanismes de protection des enfants vulnérables dans 10 communautés.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>3.1.1. Mettre en place des comités communautaires de protection de l’enfance.</li>
+                <li>3.1.2. Former acteurs/éducateurs/relais à la prévention et détection (Programme Enfance protégée).</li>
+                <li>3.1.3. Créer des clubs de défense des droits et des espaces sûrs (animations, cellules d’écoute).</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 3.2</h6>
+              <p class="tiny text-muted">Élargir le projet de recueil des contes béninois et autres actions de revalorisation culturelle.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>3.2.1. Collecte et documentation de contes, récits et traditions locales.</li>
+                <li>3.2.2. Produire/diffuser des supports adaptés (livres, vidéos, audio, spectacles).</li>
+                <li>3.2.3. Ateliers de mise en scène, marionnettes traditionnelles, festival culinaire.</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 3.3</h6>
+              <p class="tiny text-muted">Mettre en place un programme de plaidoyer contre les VBG.</p>
+              <ul class="tiny ps-3 mb-0 check-list">
+                <li>3.3.1. Campagnes de sensibilisation communautaire et scolaire.</li>
+                <li>3.3.2. Réseaux locaux d’acteurs pour coordonner la lutte contre les VBG.</li>
+                <li>3.3.3. Actions de plaidoyer auprès des décideurs et leaders.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Axe 4 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAxe4">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAxe4" aria-expanded="false" aria-controls="collapseAxe4">
+              <span class="fw-semibold me-2">Axe 4&nbsp;:</span> Engagement environnemental et développement durable
+            </button>
+          </h2>
+          <div id="collapseAxe4" class="accordion-collapse collapse" aria-labelledby="headingAxe4" data-bs-parent="#programmesAccordion">
+            <div class="accordion-body small">
+              <h6 class="fw-semibold mb-1">Objectif stratégique 4.1</h6>
+              <p class="tiny text-muted">Former 500 jeunes et femmes aux pratiques écologiques durables.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>4.1.1. Sessions aux métiers verts et pratiques écologiques (Programme Éco‑citoyens).</li>
+                <li>4.1.2. Clubs écocitoyens et jardins communautaires/scolaires.</li>
+                <li>4.1.3. Partenariats avec structures d’agroécologie et environnement.</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 4.2</h6>
+              <p class="tiny text-muted">Initier 3 projets communautaires de protection de l’environnement.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>4.2.1. Identifier et impliquer les communautés (reboisement, assainissement, déchets).</li>
+                <li>4.2.2. Mobiliser financements et appuis techniques.</li>
+                <li>4.2.3. Comités locaux de suivi pour la durabilité.</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 4.3</h6>
+              <p class="tiny text-muted">Promouvoir la consommation locale et responsable dans 8 communautés.</p>
+              <ul class="tiny ps-3 mb-0 check-list">
+                <li>4.3.1. Campagnes sur consommation locale et réduction des plastiques.</li>
+                <li>4.3.2. Foires communautaires valorisant les produits locaux et écologiques (Consommation responsable).</li>
+                <li>4.3.3. Encourager des AGR basées sur recyclage, upcycling et transformation locale.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Axe 5 -->
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingAxe5">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAxe5" aria-expanded="false" aria-controls="collapseAxe5">
+              <span class="fw-semibold me-2">Axe 5&nbsp;:</span> Renforcement institutionnel et développement organisationnel
+            </button>
+          </h2>
+          <div id="collapseAxe5" class="accordion-collapse collapse" aria-labelledby="headingAxe5" data-bs-parent="#programmesAccordion">
+            <div class="accordion-body small">
+              <h6 class="fw-semibold mb-1">Objectif stratégique 5.1</h6>
+              <p class="tiny text-muted">Améliorer la gouvernance et les capacités opérationnelles de l'ONG.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>5.1.1. Réviser/actualiser textes statutaires, manuel de procédures et S&E axé résultats.</li>
+                <li>5.1.2. Former membres/personnel à la gouvernance associative, gestion de projets et suivi‑évaluation.</li>
+                <li>5.1.3. Mécanismes réguliers de redevabilité (assemblées, bilans publics, consultation bénéficiaires).</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 5.2</h6>
+              <p class="tiny text-muted">Diversifier les sources de financement et renforcer la durabilité financière.</p>
+              <ul class="tiny ps-3 mb-3 check-list">
+                <li>5.2.1. Développer/soumettre des propositions de projets aux bailleurs.</li>
+                <li>5.2.2. Initier des AGR internes pour l’autofinancement.</li>
+                <li>5.2.3. Dispositif de mobilisation communautaire de ressources (cotisations, mécénat, philanthropie locale).</li>
+              </ul>
+              <h6 class="fw-semibold mb-1">Objectif stratégique 5.3</h6>
+              <p class="tiny text-muted">Développer la visibilité et les partenariats stratégiques.</p>
+              <ul class="tiny ps-3 mb-0 check-list">
+                <li>5.3.1. Stratégie de communication institutionnelle, refonte du site et renforcement social media.</li>
+                <li>5.3.2. Partenariats techniques/financiers avec ONG, institutions publiques et acteurs privés.</li>
+                <li>5.3.3. Participation active aux réseaux/plateformes/cadres de concertation de la société civile.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Impact chiffré -->
+    <section id="impact" class="about-section" data-aos="fade-up" aria-labelledby="impact-title">
+      <h2 id="impact-title" class="section-title mb-3">Notre impact</h2>
+      <div class="mb-5" id="impact" data-aos="fade-up" data-aos-delay="80">
+      <div class="row g-4">
+        <div class="col-md-3 col-6">
+          <div class="metric-box p-3 rounded-4 text-center h-100">
+            <div class="metric-value">{{ metrics.jeunes_formes|default:"120+" }}</div>
+            <div class="metric-label small text-muted">Jeunes formés</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="metric-box p-3 rounded-4 text-center h-100">
+            <div class="metric-value">{{ metrics.sessions_sante|default:"35" }}</div>
+            <div class="metric-label small text-muted">Sessions santé</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="metric-box p-3 rounded-4 text-center h-100">
+            <div class="metric-value">{{ metrics.actions_environnement|default:"18" }}</div>
+            <div class="metric-label small text-muted">Actions environnement</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="metric-box p-3 rounded-4 text-center h-100">
+            <div class="metric-value">{{ metrics.zones_intervention|default:"5" }}</div>
+            <div class="metric-label small text-muted">Zones d'intervention</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <!-- Gouvernance & Partenaires -->
+    <section id="gouvernance" class="about-section" data-aos="fade-up" aria-labelledby="gouvernance-title">
+    <h2 id="gouvernance-title" class="section-title mb-3">Gouvernance & Partenariats</h2>
+      <div class="row g-4 small">
+        <div class="col-md-6">
+          <div class="p-3 rounded-4 border bg-white h-100">
+            <h6 class="fw-semibold mb-2"><i class="fa fa-users me-1 text-primary"></i>Gouvernance</h6>
+            <p class="tiny text-muted mb-2">Structure collégiale avec redevabilité et contrôle interne basés sur la transparence.</p>
+            <ul class="tiny ps-3 mb-0 check-list">
+              <li>Conseil de coordination</li>
+              <li>Révision annuelle des priorités</li>
+              <li>Suivi éthique & protection</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 rounded-4 border bg-white h-100">
+            <h6 class="fw-semibold mb-2"><i class="fa fa-handshake-angle me-1 text-primary"></i>Partenariats</h6>
+            <p class="tiny text-muted mb-2">Collaboration avec acteurs locaux, éducatifs et santé.</p>
+            <ul class="tiny ps-3 mb-0 check-list">
+              <li>Approche co‑construction</li>
+              <li>Partage de ressources</li>
+              <li>Accélération impact</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <h2 id="gouvernance-title" class="section-title mb-3">Nos Partenaires</h2>
+        <div class="partner-logos">
+          <a class="partner-logo" href="https://www.facebook.com/@dwsafrica/?hr=1" target="_blank" rel="noopener" aria-label="DWS (ouvre un nouvel onglet)" title="DWS">
+            <img src="{% static 'img/partners/DWS.png' %}" alt="DWS" loading="lazy" decoding="async" />
+          </a>
+          <a class="partner-logo" href="https://m.facebook.com/p/EYRA-PROD-100076401228387/?hr=1&wtsid=rdr_0ofoKGNk8qUdMW2pQ" target="_blank" rel="noopener" aria-label="EPRO (ouvre un nouvel onglet)" title="EPRO">
+            <img src="{% static 'img/partners/EPRO.png' %}" alt="EPRO" loading="lazy" decoding="async" />
+          </a>
+          <a class="partner-logo" href="https://m.facebook.com/@isfafrique/?locale=fr_FR&wtsid=rdr_0Sfr1GPySODI4MLfF&hr=1" target="_blank" rel="noopener" aria-label="ISF Afrique (ouvre un nouvel onglet)" title="ISF Afrique">
+            <img src="{% static 'img/partners/ISF_Afrique.png' %}" alt="ISF Afrique" loading="lazy" decoding="async" />
+          </a>
+          <a class="partner-logo" href="https://www.techpoolafrica.net" target="_blank" rel="noopener" aria-label="TechPoolAfrica (ouvre un nouvel onglet)" title="TechPoolAfrica">
+            <img src="{% static 'img/partners/techpool.png' %}" alt="TechPoolAfrica" loading="lazy" decoding="async" />
+          </a>
+          <a class="partner-logo" href="https://www.facebook.com/groups/574232169922099/?mibextid=rS40aB7S9Ucbxw6v" target="_blank" rel="noopener" aria-label="OPTIMA (ouvre un nouvel onglet)" title="OPTIMA">
+            <img src="{% static 'img/partners/OPTIMA.png' %}" alt="OPTIMA" loading="lazy" decoding="async" />
+          </a>
+          <a class="partner-logo" href="https://example.com/nani" target="_blank" rel="noopener" aria-label="NANI (ouvre un nouvel onglet)" title="NANI">
+            <img src="{% static 'img/partners/NANI.jpg' %}" alt="NANI" loading="lazy" decoding="async" />
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Appel à action -->
+    <section id="action" class="about-section" data-aos="fade-up" aria-labelledby="action-title">
+      <h2 id="gouvernance-title" class="section-title mb-3">Soutenir notre action</h2>
+      <div class="p-4 p-md-5 rounded-4 border cta-box position-relative overflow-hidden">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <h2 id="action-title" class="h5 fw-semibold mb-2">Contribuer maintenant</h2>
+            <p class="small text-muted mb-0">Chaque soutien accélère une transformation durable. Rejoignez-nous comme partenaire, bénévole ou donateur pour amplifier l’impact.</p>
+          </div>
+          <div class="col-lg-4 text-lg-end">
+            <a href="/donner/" class="btn btn-accent me-2 mb-2"><i class="fa fa-heart me-1"></i>Soutenir</a>
+            <a href="/contact/" class="btn btn-outline-primary mb-2"><i class="fa fa-paper-plane me-1"></i>Nous écrire</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+{% endblock %}

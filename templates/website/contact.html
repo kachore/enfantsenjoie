@@ -1,0 +1,255 @@
+{% extends 'website/base.html' %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container position-relative">
+    <h1 class="display-6 fw-bold mb-2">Entrer en contact</h1>
+    <p class="lead mb-0" style="max-width:760px;margin:0 auto;">Une idée, une question, une envie de partenariat ? Nous sommes à l'écoute et répondons avec attention.</p>
+  </div>
+</section>
+{% endblock %}
+{% block content %}
+<div class="row g-4" data-aos="fade-up" data-aos-delay="60">
+  <div class="col-12">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between mb-2 gap-2">
+      <div>
+        <h2 class="h6 text-uppercase fw-bold mb-1">Nous joindre</h2>
+        <p class="tiny text-muted mb-0">Choisissez le canal adapté. Délai moyen de réponse : 24–48h.</p>
+      </div>
+      <div class="tiny text-muted d-none d-lg-block">Confidentialité garantie.</div>
+    </div>
+    <div class="row g-3 contact-methods" role="list" aria-label="Moyens de contact">
+      <!-- Email -->
+      <div class="col-md-3" role="listitem">
+        <div class="contact-card p-3 rounded-4 h-100 position-relative overflow-hidden">
+          <div class="d-flex align-items-start">
+            <div class="contact-icon me-3 flex-shrink-0"><i class="fa fa-envelope"></i></div>
+            <div class="pe-1">
+              <h6 class="mb-1 fw-semibold">Email</h6>
+              <p class="tiny text-muted mb-1">Support & propositions.</p>
+              <a href="mailto:enfantsenjoie@gmail.com" class="tiny fw-medium text-decoration-none">Envoyer un email</a>
+            </div>
+          </div>
+          <span class="position-absolute top-0 end-0 m-2 badge bg-primary-subtle text-primary tiny fw-normal">Prioritaire</span>
+        </div>
+      </div>
+      <!-- Téléphone -->
+      <div class="col-md-3" role="listitem">
+        <div class="contact-card p-3 rounded-4 h-100 position-relative overflow-hidden">
+          <div class="d-flex align-items-start">
+            <div class="contact-icon me-3 flex-shrink-0"><i class="fa fa-phone"></i></div>
+            <div class="pe-1">
+              <h6 class="mb-1 fw-semibold">Téléphone</h6>
+              <p class="tiny text-muted mb-1">Appels (heures ouvrables).</p>
+              <a href="tel:0195855881" class="tiny fw-medium text-decoration-none d-block">Passez un appel</a>
+            </div>
+          </div>
+          <span class="position-absolute top-0 end-0 m-2 badge bg-info-subtle text-info tiny fw-normal">Ligne</span>
+        </div>
+      </div>
+      <!-- WhatsApp -->
+      <div class="col-md-3" role="listitem">
+        <div class="contact-card p-3 rounded-4 h-100 position-relative overflow-hidden">
+          <div class="d-flex align-items-start">
+            <div class="contact-icon me-3 flex-shrink-0"><i class="fab fa-whatsapp"></i></div>
+            <div class="pe-1">
+              <h6 class="mb-1 fw-semibold">WhatsApp</h6>
+              <p class="tiny text-muted mb-1">Messages & coordination.</p>
+              <a href="https://wa.me/+2290191264949" target="_blank" rel="noopener" class="tiny fw-medium d-block">Envoyez un message</a>
+            </div>
+          </div>
+          <span class="position-absolute top-0 end-0 m-2 badge bg-success-subtle text-success tiny fw-normal">Rapide</span>
+        </div>
+      </div>
+      <!-- Partenariats -->
+      <div class="col-md-3" role="listitem">
+        <div class="contact-card p-3 rounded-4 h-100 position-relative overflow-hidden">
+          <div class="d-flex align-items-start">
+            <div class="contact-icon me-3 flex-shrink-0"><i class="fa fa-handshake"></i></div>
+            <div class="pe-1">
+              <h6 class="mb-1 fw-semibold">Partenariats</h6>
+              <p class="tiny text-muted mb-2">Entreprises & fondations.</p>
+              <div class="d-flex flex-wrap gap-1 mb-1">
+                <span class="badge bg-primary-subtle text-primary tiny fw-normal">Collaborations</span>
+                <span class="badge bg-secondary-subtle text-secondary tiny fw-normal">Co-création</span>
+              </div>
+              <a href="mailto:enfantsenjoie@gmail.com?subject=Partenariat" class="tiny text-decoration-none">Proposer un échange →</a>
+            </div>
+          </div>
+          <span class="position-absolute top-0 end-0 m-2 badge bg-warning-subtle text-warning tiny fw-normal">Stratégique</span>
+        </div>
+      </div>
+    </div>
+    <div class="contact-note tiny text-muted mt-3">Chaque canal est surveillé. Évitez les envois multiples.</div>
+  </div>
+  <div class="col-12 d-flex justify-content-center" id="contact-form">
+    <div class="contact-form-shell w-100" style="max-width:860px;">
+    <div class="contact-form-wrapper pattern-bg p-4 rounded-4 shadow-sm position-relative">
+      <div class="inline-success-placeholder"></div>
+  <h2 class="h5 fw-semibold mb-2">Écrire un message</h2>
+      <p class="tiny text-muted mb-3">Les champs marqués d'un * sont requis.</p>
+      <form method="post" class="contact-enhanced" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="row g-3 form-grid-contact compact-mobile">
+          <div class="col-md-6 col-12">
+            <label class="form-label tiny text-uppercase fw-semibold mb-1" for="id_name"> {{ form.name.label }}{% if form.name.field.required %} *{% endif %}</label>
+            <div class="input-icon-group">
+              <!--<span class="icon"><i class="fa fa-user"></i></span>-->
+              {{ form.name }}
+            </div>
+            <div class="form-hint tiny text-muted mt-1">Votre identité nous aide à personnaliser la réponse.</div>
+            {% if form.name.errors %}<div class="text-danger tiny mt-1">{{ form.name.errors|join:', ' }}</div>{% endif %}
+          </div>
+          <div class="col-md-6 col-12">
+            <label class="form-label tiny text-uppercase fw-semibold mb-1" for="id_email"> {{ form.email.label }}{% if form.email.field.required %} *{% endif %}</label>
+            <div class="input-icon-group">
+              <!--<span class="icon"><i class="fa fa-at"></i></span>-->
+              {{ form.email }}
+            </div>
+            <div class="form-hint tiny text-muted mt-1">Strictement confidentiel. Jamais partagé.</div>
+            {% if form.email.errors %}<div class="text-danger tiny mt-1">{{ form.email.errors|join:', ' }}</div>{% endif %}
+          </div>
+
+          <div class="col-md-4 col-sm-6 col-12">
+            <label class="form-label tiny text-uppercase fw-semibold mb-1" for="id_phone"> {{ form.phone.label }}</label>
+            <div class="input-icon-group">
+              <!--<span class="icon"><i class="fa fa-phone"></i></span>-->
+              {{ form.phone }}
+            </div>
+            {% if form.phone.errors %}<div class="text-danger tiny mt-1">{{ form.phone.errors|join:', ' }}</div>{% endif %}
+          </div>
+            <div class="col-md-4 col-sm-6 col-12">
+            <label class="form-label tiny text-uppercase fw-semibold mb-1" for="id_request_type"> {{ form.request_type.label }}{% if form.request_type.field.required %} *{% endif %}</label>
+            <div class="input-icon-group select-wrapper">
+              <!--<span class="icon"><i class="fa fa-tag"></i></span>-->
+              {{ form.request_type }}
+            </div>
+            <div class="form-hint tiny text-muted mt-1">Aidez-nous à orienter votre message.</div>
+            {% if form.request_type.errors %}<div class="text-danger tiny mt-1">{{ form.request_type.errors|join:', ' }}</div>{% endif %}
+          </div>
+          <div class="col-md-4 col-sm-6 col-12">
+            <label class="form-label tiny text-uppercase fw-semibold mb-1" for="id_subject"> {{ form.subject.label }}</label>
+            <div class="input-icon-group">
+              <!--<span class="icon"><i class="fa fa-lightbulb"></i></span>-->
+              {{ form.subject }}
+            </div>
+            {% if form.subject.errors %}<div class="text-danger tiny mt-1">{{ form.subject.errors|join:', ' }}</div>{% endif %}
+          </div>
+
+          <div class="col-12">
+            <label class="form-label tiny text-uppercase fw-semibold mb-1" for="id_message"> {{ form.message.label }}{% if form.message.field.required %} *{% endif %}</label>
+            <div class="input-icon-group textarea-group">
+              <span class="icon"><i class="fa fa-message"></i></span>
+              {{ form.message }}
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-1 tiny">
+              <div class="form-hint text-muted">Soyez précis pour une réponse plus rapide.</div>
+              <div class="char-counter" data-for="id_message"><span class="count">0</span>/<span class="max">2000</span></div>
+            </div>
+            {% if form.message.errors %}<div class="text-danger tiny mt-1">{{ form.message.errors|join:', ' }}</div>{% endif %}
+          </div>
+        </div>
+        <div class="d-flex justify-content-end pt-2">
+          <button class="btn btn-gradient btn-sm px-4" type="submit"><i class="fa fa-paper-plane me-1"></i> Envoyer</button>
+        </div>
+      </form>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+<div class="text-center mt-5 small text-muted" data-aos="fade-up" data-aos-delay="120">Temps de réponse moyen : <strong>24-48h</strong>.</div>
+<script>
+  (function(){
+    // Auto-scroll + duplication succès inline
+    const flash = document.querySelector('.flash-messages .alert-success');
+    if(flash){
+      const target = document.getElementById('contact-form');
+      if(target){ setTimeout(()=> target.scrollIntoView({behavior:'smooth', block:'start'}), 150); }
+      const inlineZone = document.querySelector('.inline-success-placeholder');
+      if(inlineZone){
+        const clone = flash.cloneNode(true);
+        clone.classList.remove('mb-2');
+        clone.classList.add('mb-3');
+        inlineZone.innerHTML = '';
+        inlineZone.appendChild(clone);
+      }
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({event:'contact_success_inline'});
+    }
+    // Tracking interactions champs
+    const form = document.querySelector('.contact-enhanced');
+    if(form){
+      window.dataLayer = window.dataLayer || [];
+      form.querySelectorAll('input, textarea, select').forEach(el=>{
+        el.addEventListener('focus', ()=>{
+          if(!el.dataset.tracked){
+            el.dataset.tracked='1';
+            window.dataLayer.push({event:'field_focus', field: el.name});
+          }
+        });
+        el.addEventListener('blur', ()=>{
+          if(el.checkValidity()){
+            el.classList.add('is-valid');
+            el.classList.remove('is-invalid');
+          } else if(el.value.trim().length){
+            el.classList.add('is-invalid');
+            el.classList.remove('is-valid');
+          }
+        });
+        // Validation live
+        const showError = () => {
+          // Nettoyage existant
+            if(el.closest('.input-icon-group')){
+              const existing = el.closest('.input-icon-group').parentElement.querySelector('.live-error');
+              if(existing) existing.remove();
+            }
+          if(el.validity.valid || !el.value.trim().length){ return; }
+          const msg = el.validationMessage || 'Valeur invalide';
+          const div = document.createElement('div');
+          div.className = 'live-error';
+          div.textContent = msg;
+          const container = el.closest('.input-icon-group')?.parentElement || el.parentElement;
+          container.appendChild(div);
+        };
+        ['input','change'].forEach(evt=> el.addEventListener(evt, ()=>{
+          if(el.checkValidity()){
+            el.classList.add('is-valid');
+            el.classList.remove('is-invalid');
+            const existing = el.closest('.input-icon-group')?.parentElement.querySelector('.live-error');
+            if(existing) existing.remove();
+          } else if(el.value.trim().length){
+            el.classList.add('is-invalid');
+            el.classList.remove('is-valid');
+            showError();
+          } else {
+            el.classList.remove('is-invalid','is-valid');
+            const existing = el.closest('.input-icon-group')?.parentElement.querySelector('.live-error');
+            if(existing) existing.remove();
+          }
+        }));
+      });
+
+      // Compteur caractères & auto-resize (après binding focus/blur)
+      const message = document.getElementById('id_message');
+      const counter = document.querySelector('.char-counter');
+      if(message && counter){
+        const max = parseInt(counter.querySelector('.max').textContent, 10) || parseInt(message.getAttribute('maxlength')||'0',10) || 2000;
+        const countSpan = counter.querySelector('.count');
+        const update = () => {
+          const len = message.value.length;
+          countSpan.textContent = len;
+          counter.classList.remove('warning','danger');
+          const ratio = len / max;
+          if(ratio > .9) counter.classList.add('danger');
+          else if(ratio > .75) counter.classList.add('warning');
+          message.style.height = 'auto';
+          message.style.height = Math.min(message.scrollHeight, 600) + 'px';
+        };
+        ['input','change'].forEach(evt=> message.addEventListener(evt, update));
+        update();
+      }
+    }
+  })();
+</script>
+{% endblock %}

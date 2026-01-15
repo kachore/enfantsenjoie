@@ -1,0 +1,113 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}Galerie | {{ block.super }}{% endblock %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-2">Galerie</h1>
+    <p class="lead mb-0">Images & vidéos de nos sorties, ateliers et fêtes.</p>
+  </div>
+</section>
+{% endblock %}
+{% block content %}
+<div class="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+  <div class="d-flex align-items-center gap-2">
+    <h2 class="h5 fw-semibold mb-0">Médias récents</h2>
+  </div>
+  <div class="btn-group" role="group" aria-label="Filtrer par type">
+    <a href="/galerie/" class="btn btn-sm {% if active_type == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">Tous</a>
+    <a href="/galerie/?type=images" class="btn btn-sm {% if active_type == 'images' %}btn-primary{% else %}btn-outline-primary{% endif %}">Images</a>
+    <a href="/galerie/?type=videos" class="btn btn-sm {% if active_type == 'videos' %}btn-primary{% else %}btn-outline-primary{% endif %}">Vidéos</a>
+  </div>
+</div>
+{% if media_list %}
+<div class="row g-3" role="list" aria-label="Galerie médias">
+  {% for m in media_list %}
+  {% widthratio forloop.counter 1 20 as delay %}
+  <div class="col-6 col-md-4 col-lg-3" role="listitem" data-aos="fade-up" data-aos-delay="{{ delay }}">
+    <figure class="gallery-item position-relative m-0 rounded-3 overflow-hidden shadow-sm">
+      <div class="ratio ratio-1x1 bg-light">
+        {% if m.media_type == 'image' %}
+          <img src="{{ m.url }}" alt="{{ m.title }}" class="w-100 h-100 object-fit-cover js-lightbox" loading="lazy" decoding="async" data-type="image" data-full="{{ m.url }}">
+        {% elif m.media_type == 'video' %}
+          <video class="w-100 h-100 object-fit-cover js-lightbox" preload="metadata" muted playsinline data-type="video" data-full="{{ m.url }}">
+            <source src="{{ m.url }}" type="video/mp4">
+          </video>
+        {% endif %}
+      </div>
+      <figcaption class="p-2 small">
+        <strong class="d-block tiny text-truncate">{{ m.title }}</strong>
+        {% if m.caption %}<span class="d-block text-muted tiny text-truncate">{{ m.caption }}</span>{% endif %}
+  {% if m.slug %}<a href="/actualites/{{ m.slug }}/" class="stretched-link" aria-label="Voir la publication liée"></a>{% endif %}
+      </figcaption>
+    </figure>
+  </div>
+  {% endfor %}
+</div>
+  {% if page_obj %}
+  <nav class="mt-4 d-flex justify-content-between align-items-center" aria-label="Pagination de la galerie">
+    <div>
+      {% if page_obj.has_previous %}
+        <a class="btn btn-sm btn-outline-primary" href="?{% if active_type == 'images' %}type=images&{% elif active_type == 'videos' %}type=videos&{% endif %}page={{ page_obj.previous_page_number }}">&laquo; Précédent</a>
+      {% endif %}
+    </div>
+    <div class="small text-muted">Page {{ page_obj.number }} sur {{ paginator.num_pages }}</div>
+    <div>
+      {% if page_obj.has_next %}
+        <a class="btn btn-sm btn-outline-primary" href="?{% if active_type == 'images' %}type=images&{% elif active_type == 'videos' %}type=videos&{% endif %}page={{ page_obj.next_page_number }}">Suivant &raquo;</a>
+      {% endif %}
+    </div>
+  </nav>
+  {% endif %}
+{% else %}
+  <p class="text-muted">Aucun média disponible pour le moment.</p>
+{% endif %}
+
+<!-- Lightbox overlay -->
+<div id="lightbox" class="lightbox-overlay" aria-hidden="true" role="dialog" aria-label="Aperçu média" tabindex="-1">
+  <button type="button" class="lightbox-close" aria-label="Fermer l’aperçu">&times;</button>
+  <div class="lightbox-content" role="document"></div>
+  <div class="lightbox-backdrop"></div>
+</div>
+
+<script>
+(function(){
+  const overlay = document.getElementById('lightbox');
+  if(!overlay) return;
+  const content = overlay.querySelector('.lightbox-content');
+  const closeBtn = overlay.querySelector('.lightbox-close');
+  const open = (type, url) => {
+    content.innerHTML = '';
+    if(type === 'image'){
+      const img = document.createElement('img');
+      img.src = url; img.alt=''; img.className='lb-media';
+      content.appendChild(img);
+    } else if(type === 'video'){
+      const v = document.createElement('video');
+      v.src = url; v.controls = true; v.autoplay = true; v.playsInline = true; v.className='lb-media';
+      content.appendChild(v);
+    }
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  };
+  const close = () => {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden','true');
+    content.innerHTML = '';
+    document.body.style.overflow='';
+  };
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', (e)=>{ if(e.target === overlay || e.target.classList.contains('lightbox-backdrop')) close(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && overlay.classList.contains('open')) close(); });
+  document.querySelectorAll('.js-lightbox').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const type = el.getAttribute('data-type');
+      const url = el.getAttribute('data-full') || el.currentSrc || el.src;
+      if(url) open(type, url);
+    });
+  });
+})();
+</script>
+{% endblock %}

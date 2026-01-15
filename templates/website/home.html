@@ -1,0 +1,284 @@
+{% extends 'website/base.html' %}
+{% load responsive_images %}
+
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container position-relative">
+    <h1 class="display-5 fw-bold mb-3">Répandre l'amour sans condition</h1>
+    <p class="lead mx-auto" style="max-width:680px;">Promouvoir la dignité, l'égalité et le potentiel des enfants, jeunes et femmes à travers éducation, santé, autonomisation et durabilité.</p>
+    <div class="mt-4 d-flex justify-content-center gap-3 flex-wrap">
+      <a href="/a-propos/" class="btn btn-light btn-lg px-4 shadow-sm">Découvrir</a>
+  <a href="/donner/" class="btn btn-accent btn-lg px-4"><i class="fa fa-heart me-2"></i>Soutenir</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- À la une: grand carrousel posts/actualités/événements -->
+<section class="news-hero mb-5" aria-label="À la une">
+  <div class="container">
+    <div id="homeHighlights" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+      <div class="carousel-inner">
+        {% for item in highlights %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+          <div class="ratio ratio-21x9 news-hero-slide">
+            {% with slides_list=item.media.all %}
+              {% if item.image %}
+                <img src="{{ item.image.url }}" srcset="{% responsive_srcset item.image %}" sizes="(max-width: 1399px) 100vw, 1320px" class="w-100 h-100 object-fit-cover" alt="{{ item.title }}">
+              {% elif slides_list|length > 0 %}
+                {% with m=slides_list.0 %}
+                  {% if m.media_type == 'image' %}
+                    <img src="{{ m.file.url }}" srcset="{% responsive_srcset m.file %}" sizes="(max-width: 1399px) 100vw, 1320px" class="w-100 h-100 object-fit-cover" alt="{{ item.title }}">
+                  {% elif m.media_type == 'video' %}
+                    <video class="w-100 h-100 object-fit-cover" preload="metadata" muted playsinline autoplay loop>
+                      <source src="{{ m.file.url }}" type="video/mp4">
+                    </video>
+                  {% else %}
+                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted small">Sans visuel</div>
+                  {% endif %}
+                {% endwith %}
+              {% else %}
+                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted small">Sans visuel</div>
+              {% endif %}
+            {% endwith %}
+            <div class="title-overlay d-none d-sm-block">
+              <h3 class="h5 fw-semibold mb-0">
+                <a href="{{ item.get_absolute_url }}" class="stretched-link text-decoration-none">{{ item.title }}</a>
+              </h3>
+            </div>
+          </div>
+          <!-- Titre sous l'image sur mobile -->
+          <div class="title-below d-block d-sm-none mt-2">
+            <h3 class="h6 fw-semibold mb-0">
+              <a href="{{ item.get_absolute_url }}" class="text-decoration-none">{{ item.title }}</a>
+            </h3>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      {% if highlights|length > 1 %}
+      <button class="carousel-control-prev" type="button" data-bs-target="#homeHighlights" data-bs-slide="prev" aria-label="Précédent">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Précédent</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#homeHighlights" data-bs-slide="next" aria-label="Suivant">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Suivant</span>
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="mb-5" data-aos="fade-up">
+  <div class="row g-4 align-items-stretch">
+    <div class="col-lg-5 d-flex flex-column">
+      <div class="mb-4">
+        <h2 class="section-title mb-3">Nos axes d'intervention</h2>
+  <p class="text-muted mb-3 small text-justify">Nous concentrons notre énergie sur des leviers structurants pour créer un impact durable et mesurable dans les communautés. En renforçant l'autonomie des femmes et des jeunes, en démocratisant l'accès aux savoirs et au numérique, en promouvant la santé globale, la protection de l'enfance et la préservation de l'environnement, nous faisons émerger des chaînes de progrès qui se renforcent mutuellement. Chaque axe nourrit les autres pour bâtir inclusion, résilience et prospérité partagée.</p>
+        <a href="/a-propos/" class="btn btn-outline-primary btn-sm">En savoir plus</a>
+      </div>
+      
+    </div>
+    <div class="col-lg-7">
+      <div class="row g-3" role="list" aria-label="Axes d'intervention">
+        <div class="col-6 col-md-4" role="listitem">
+          <a href="/actualites/?cat=autonomisation" class="axis-card d-block h-100 p-3 rounded-4 shadow-sm position-relative overflow-hidden text-decoration-none">
+            <div class="axis-ico mb-2"><i class="fa fa-circle-notch"></i></div>
+            <h6 class="mb-1">Autonomisation</h6>
+            <p class="axis-desc small mb-0 text-muted">Femmes & jeunes filles</p>
+          </a>
+        </div>
+        <div class="col-6 col-md-4" role="listitem">
+          <a href="/actualites/?cat=education-tech" class="axis-card d-block h-100 p-3 rounded-4 shadow-sm position-relative overflow-hidden text-decoration-none">
+            <div class="axis-ico mb-2"><i class="fa fa-laptop-code"></i></div>
+            <h6 class="mb-1">Éducation & Tech</h6>
+            <p class="axis-desc small mb-0 text-muted">IA, concours, ateliers</p>
+          </a>
+        </div>
+        <div class="col-6 col-md-4" role="listitem">
+          <a href="/actualites/?cat=sante-bien-etre" class="axis-card d-block h-100 p-3 rounded-4 shadow-sm position-relative overflow-hidden text-decoration-none">
+            <div class="axis-ico mb-2"><i class="fa fa-heart-pulse"></i></div>
+            <h6 class="mb-1">Santé & bien-être</h6>
+            <p class="axis-desc small mb-0 text-muted">Prévention & soins</p>
+          </a>
+        </div>
+        <div class="col-6 col-md-4" role="listitem">
+          <a href="/actualites/?cat=protection-enfance" class="axis-card d-block h-100 p-3 rounded-4 shadow-sm position-relative overflow-hidden text-decoration-none">
+            <div class="axis-ico mb-2"><i class="fa fa-child"></i></div>
+            <h6 class="mb-1">Protection enfance</h6>
+            <p class="axis-desc small mb-0 text-muted">Droits & sécurité</p>
+          </a>
+        </div>
+        <div class="col-6 col-md-4" role="listitem">
+          <a href="/actualites/?cat=environnement" class="axis-card d-block h-100 p-3 rounded-4 shadow-sm position-relative overflow-hidden text-decoration-none">
+            <div class="axis-ico mb-2"><i class="fa fa-leaf"></i></div>
+            <h6 class="mb-1">Environnement</h6>
+            <p class="axis-desc small mb-0 text-muted">Durabilité & climat</p>
+          </a>
+        </div>
+        <div class="col-6 col-md-4" role="listitem">
+          <a href="/actualites/?cat=engagement-civique" class="axis-card d-block h-100 p-3 rounded-4 shadow-sm position-relative overflow-hidden text-decoration-none">
+            <div class="axis-ico mb-2"><i class="fa fa-people-group"></i></div>
+            <h6 class="mb-1">Engagement civique</h6>
+            <p class="axis-desc small mb-0 text-muted">Leadership & plaidoyer</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0 section-title">Actualités récentes</h3>
+  <a href="/actualites/" class="small text-decoration-none">Tout voir <i class="fa fa-arrow-right ms-1"></i></a>
+</div>
+<div class="row g-4 mb-5" data-aos="fade-up" data-aos-delay="50">
+  {% for post in posts %}
+    <div class="col-md-4">
+  <div class="news-card h-100 position-relative d-flex flex-column">
+     <div class="ratio ratio-16x9 position-relative">
+       {% with slides_list=post.media.all %}
+         {% if post.image or slides_list|length > 0 %}
+           <div id="homePostCarousel-{{ forloop.counter0 }}" class="carousel slide h-100" data-bs-ride="false">
+             <div class="carousel-inner h-100">
+               {% if post.image %}
+                 <div class="carousel-item h-100 active">
+                   <img src="{{ post.image.url }}" srcset="{% responsive_srcset post.image %}" sizes="{% responsive_sizes %}" class="d-block w-100 h-100 object-fit-cover" alt="{{ post.title }}">
+                 </div>
+               {% endif %}
+               {% for m in slides_list %}
+                 {% if m.media_type == 'image' or m.media_type == 'video' %}
+                   <div class="carousel-item h-100 {% if not post.image and forloop.first %}active{% endif %}">
+                     {% if m.media_type == 'image' %}
+                       <img src="{{ m.file.url }}" srcset="{% responsive_srcset m.file %}" sizes="{% responsive_sizes %}" class="d-block w-100 h-100 object-fit-cover" alt="{{ post.title }}">
+                     {% else %}
+                       <video class="w-100 h-100 object-fit-cover" preload="metadata" muted playsinline>
+                         <source src="{{ m.file.url }}" type="video/mp4">
+                       </video>
+                     {% endif %}
+                   </div>
+                 {% endif %}
+               {% endfor %}
+             </div>
+             {% if post.image or slides_list|length > 1 %}
+               <button class="carousel-control-prev" type="button" data-bs-target="#homePostCarousel-{{ forloop.counter0 }}" data-bs-slide="prev">
+                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                 <span class="visually-hidden">Précédent</span>
+               </button>
+               <button class="carousel-control-next" type="button" data-bs-target="#homePostCarousel-{{ forloop.counter0 }}" data-bs-slide="next">
+                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                 <span class="visually-hidden">Suivant</span>
+               </button>
+             {% endif %}
+           </div>
+         {% else %}
+           <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted small">Sans image</div>
+         {% endif %}
+       {% endwith %}
+     </div>
+        <span class="badge post-badge text-light fw-normal">Article</span>
+        <div class="p-3">
+          <h5 class="fw-semibold fs-6 mb-2">{{ post.title }}</h5>
+          <!--<a href="{{ post.get_absolute_url }}" class="stretched-link"></a>-->
+          <a href="{{ post.get_absolute_url }}" class="btn btn-sm btn-outline-primary mt-2">Lire</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">Aucune actualité publiée pour le moment.</p>
+  {% endfor %}
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0 section-title">Prochains événements</h3>
+  <a href="/actualites/" class="small text-decoration-none">Voir plus <i class="fa fa-arrow-right ms-1"></i></a>
+</div>
+<div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+  {% for event in events %}
+    <div class="col-md-4">
+      <div class="news-card h-100 position-relative">
+     <div class="ratio ratio-16x9 position-relative">
+       {% with slides_list=event.media.all %}
+         {% if event.image or slides_list|length > 0 %}
+           <div id="homeEventCarousel-{{ forloop.counter0 }}" class="carousel slide h-100" data-bs-ride="false">
+             <div class="carousel-inner h-100">
+               {% if event.image %}
+                 <div class="carousel-item h-100 active">
+                   <img src="{{ event.image.url }}" srcset="{% responsive_srcset event.image %}" sizes="{% responsive_sizes %}" class="d-block w-100 h-100 object-fit-cover" alt="{{ event.title }}">
+                 </div>
+               {% endif %}
+               {% for m in slides_list %}
+                 {% if m.media_type == 'image' or m.media_type == 'video' %}
+                   <div class="carousel-item h-100 {% if not event.image and forloop.first %}active{% endif %}">
+                     {% if m.media_type == 'image' %}
+                       <img src="{{ m.file.url }}" srcset="{% responsive_srcset m.file %}" sizes="{% responsive_sizes %}" class="d-block w-100 h-100 object-fit-cover" alt="{{ event.title }}">
+                     {% else %}
+                       <video class="w-100 h-100 object-fit-cover" preload="metadata" muted playsinline>
+                         <source src="{{ m.file.url }}" type="video/mp4">
+                       </video>
+                     {% endif %}
+                   </div>
+                 {% endif %}
+               {% endfor %}
+             </div>
+             {% if event.image or slides_list|length > 1 %}
+               <button class="carousel-control-prev" type="button" data-bs-target="#homeEventCarousel-{{ forloop.counter0 }}" data-bs-slide="prev">
+                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                 <span class="visually-hidden">Précédent</span>
+               </button>
+               <button class="carousel-control-next" type="button" data-bs-target="#homeEventCarousel-{{ forloop.counter0 }}" data-bs-slide="next">
+                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                 <span class="visually-hidden">Suivant</span>
+               </button>
+             {% endif %}
+           </div>
+         {% else %}
+           <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted small">Sans visuel</div>
+         {% endif %}
+       {% endwith %}
+     </div>
+    <span class="badge event-badge text-dark fw-normal">Événement</span>
+  <div class="pt-3 px-3 d-flex flex-column flex-grow-1 position-relative">
+          <h5 class="fw-semibold fs-6 mb-2">{{ event.title }}</h5>
+          <a href="{{ event.get_absolute_url }}" class="stretched-link" aria-label="Voir les détails de l'événement"></a>
+          <p class="small mb-2"><i class="fa fa-calendar me-1"></i>
+            {% if event.event_start and event.event_end %}
+              {{ event.event_start|date:"d/m/Y H:i" }} → {{ event.event_end|date:"d/m/Y H:i" }}
+            {% elif event.event_start %}
+              {{ event.event_start|date:"d/m/Y H:i" }}
+            {% elif event.date_event %}
+              {{ event.date_event|date:"d/m/Y H:i" }}
+            {% endif %}
+          </p>
+          <div class="event-card-footer mt-auto pb-3">
+            {% if event.location %}<div class="tiny text-muted mb-1"><i class="fa fa-location-dot me-1"></i>{{ event.location }}</div>{% endif %}
+            <div class="d-flex align-items-center">
+              <a href="{{ event.get_absolute_url }}" class="btn btn-sm btn-outline-primary">Voir</a>
+              {% if event.event_status %}
+                <span class="ms-auto">
+                  {% if event.event_status == 'En cours' %}
+                    <span class="status-badge badge rounded-pill" style="background:#16a34a; color:#fff; font-size:.75rem;">{{ event.event_status }}</span>
+                  {% elif event.event_status == 'Terminé' %}
+                    <span class="status-badge badge rounded-pill" style="background:#800020; color:#fff; font-size:.75rem;">{{ event.event_status }}</span>
+                  {% elif event.event_status == 'À venir' %}
+                    <span class="status-badge badge rounded-pill" style="background:#0d6efd; color:#fff; font-size:.75rem;">{{ event.event_status }}</span>
+                  {% else %}
+                    <span class="status-badge badge rounded-pill" style="background:rgba(0,0,0,.65); color:#fff; font-size:.75rem;">{{ event.event_status }}</span>
+                  {% endif %}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">Aucun événement pour le moment.</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

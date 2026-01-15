@@ -1,0 +1,63 @@
+{% extends 'admin/base_site.html' %}
+{% block title %}Dons récents | {{ block.super }}{% endblock %}
+{% block content %}
+<div class="py-3 module" style="padding:20px 24px;">
+  <h1 class="h5 fw-semibold mb-3">Dons récents</h1>
+  <div class="dashboard-metrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:14px;">
+    <div class="module" style="text-align:center;padding:12px;">
+      <div class="tiny text-muted">Total</div>
+      <div style="font-size:20px;font-weight:600;line-height:1;margin:4px 0 0;">{{ counts.total }}</div>
+    </div>
+    <div class="module" style="text-align:center;padding:12px;">
+      <div class="tiny text-muted">Payés</div>
+      <div style="font-size:20px;font-weight:600;line-height:1;margin:4px 0 0;color: var(--success-fg, #198754);">{{ counts.paid }}</div>
+    </div>
+    <div class="module" style="text-align:center;padding:12px;">
+      <div class="tiny text-muted">En attente</div>
+      <div style="font-size:20px;font-weight:600;line-height:1;margin:4px 0 0;">{{ counts.pending }}</div>
+    </div>
+    <div class="module" style="text-align:center;padding:12px;">
+      <div class="tiny text-muted">Annulés/Échec</div>
+      <div style="font-size:20px;font-weight:600;line-height:1;margin:4px 0 0;color: var(--error-fg, #dc3545);">{{ counts.canceled|add:counts.failed }}</div>
+    </div>
+  </div>
+  <div class="module" style="padding:12px; overflow:auto;">
+    <table style="width:100%;">
+      <thead>
+        <tr>
+          <th>Quand</th>
+          <th>Réf</th>
+          <th>Montant</th>
+          <th>Devise</th>
+          <th>Statut</th>
+          <th>Tx ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in donations %}
+        <tr>
+          <td class="tiny text-muted">{{ d.created_at|date:"d/m/Y H:i" }}</td>
+          <td><code class="tiny">{{ d.reference }}</code></td>
+          <td>{{ d.amount|floatformat:0 }}</td>
+          <td>{{ d.currency }}</td>
+          <td>
+            {% if d.status == 'paid' %}
+              <span class="badge success">payé</span>
+            {% elif d.status == 'pending' %}
+              <span class="badge">en attente</span>
+            {% elif d.status == 'failed' %}
+              <span class="badge error">échec</span>
+            {% else %}
+              <span class="badge warning">annulé</span>
+            {% endif %}
+          </td>
+          <td class="tiny text-muted">{{ d.fedapay_transaction_id|default:'—' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted">Aucun don pour l’instant.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

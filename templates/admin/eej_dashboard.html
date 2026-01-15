@@ -1,0 +1,28 @@
+{% extends 'admin/base_site.html' %}
+{% block title %}Dashboard EEJ | {{ block.super }}{% endblock %}
+{% block content %}
+<h1>Dashboard EEJ</h1>
+<div class="app-eej-metrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+  <div class="module"><h3>Total contenus</h3><p>{{ total_news }}</p></div>
+  <div class="module"><h3>Publiés</h3><p>{{ published_news }}</p></div>
+  <div class="module"><h3>Événements à venir</h3><p>{{ future_events }}</p></div>
+  <div class="module"><h3>Messages non traités</h3><p>{{ pending_messages }}</p></div>
+  <div class="module"><h3>Centres</h3><p>{{ centers_count }}</p></div>
+</div>
+<h2>Derniers contenus</h2>
+<table class="module" style="width:100%;">
+  <thead><tr><th>Titre</th><th>Type</th><th>Status</th><th>Date</th></tr></thead>
+  <tbody>
+    {% for n in latest_news %}
+      <tr>
+        <td><a href="/admin/website/newsitem/{{ n.id }}/change/">{{ n.title }}</a></td>
+        <td>{{ n.get_type_display }}</td>
+        <td>{{ n.status }}</td>
+        <td>{{ n.created }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">Aucun contenu récent.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

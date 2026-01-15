@@ -1,0 +1,172 @@
+{% extends 'website/base.html' %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container position-relative">
+    <h1 class="display-6 fw-bold mb-2">Soutenir notre mission</h1>
+    <p class="lead mb-3" style="max-width:760px;margin:0 auto;">Chaque contribution nourrit un écosystème d'impact : autonomisation, éducation numérique, santé globale, protection de l'enfance et durabilité environnementale.</p>
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-2">
+      <a href="#impact" class="btn btn-light btn-sm px-4 shadow-sm"><i class="fa fa-chart-line me-2"></i>Voir l'impact</a>
+  <a href="#soutenir" class="btn btn-accent btn-sm px-4"><i class="fa fa-heart me-2"></i>Faire un geste</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block content %}
+
+<div class="mb-5" id="pourquoi" data-aos="fade-up" data-aos-delay="40">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <h2 class="section-title mb-3">Pourquoi donner ?</h2>
+      <p class="text-muted text-justify small mb-3">Votre soutien alimente des programmes concrets : accès aux compétences numériques, mentorat et leadership féminin, campagnes de sensibilisation sanitaire, espaces sûrs pour l'enfance et actions écologiques locales. En investissant aujourd'hui, vous accélérez des trajectoires durables et mesurables.</p>
+      <ul class="small list-unstyled mb-4 axis-benefits">
+        <li><i class="fa fa-check text-primary me-2"></i>Effet multiplicateur : chaque euro alimente plusieurs axes</li>
+        <li><i class="fa fa-check text-primary me-2"></i>Approche systémique (éducation ↔ santé ↔ environnement)</li>
+        <li><i class="fa fa-check text-primary me-2"></i>Suivi et transparence des résultats</li>
+        <li><i class="fa fa-check text-primary me-2"></i>Renforcement des capacités locales</li>
+      </ul>
+  <a href="#soutenir" class="btn btn-outline-accent btn-sm"><i class="fa fa-heart me-1"></i>Je soutiens</a>
+    </div>
+    <div class="col-lg-6">
+      <div class="row g-3">
+        <div class="col-6">
+          <div class="impact-chip p-3 rounded-4 h-100">
+            <div class="icon-wrap mb-2"><i class="fa fa-graduation-cap"></i></div>
+            <h6 class="mb-1">Former & inspirer</h6>
+            <p class="m-0 tiny text-muted">Ateliers, mentorat, culture numérique.</p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="impact-chip p-3 rounded-4 h-100">
+            <div class="icon-wrap mb-2"><i class="fa fa-heart"></i></div>
+            <h6 class="mb-1">Soutenir les plus vulnérables</h6>
+            <p class="m-0 tiny text-muted">Protection & accompagnement ciblé.</p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="impact-chip p-3 rounded-4 h-100">
+            <div class="icon-wrap mb-2"><i class="fa fa-seedling"></i></div>
+            <h6 class="mb-1">Agir pour la planète</h6>
+            <p class="m-0 tiny text-muted">Verdissement & sensibilisation.</p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="impact-chip p-3 rounded-4 h-100">
+            <div class="icon-wrap mb-2"><i class="fa fa-users"></i></div>
+            <h6 class="mb-1">Renforcer la communauté</h6>
+            <p class="m-0 tiny text-muted">Leadership & cohésion locale.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-5" id="impact" data-aos="fade-up" data-aos-delay="80">
+  <div class="row g-4">
+    <div class="col-md-3 col-6">
+      <div class="metric-box p-3 rounded-4 text-center h-100">
+        <div class="metric-value">{{ metrics.jeunes_formes|default:"120+" }}</div>
+        <div class="metric-label small text-muted">Jeunes formés</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="metric-box p-3 rounded-4 text-center h-100">
+        <div class="metric-value">{{ metrics.sessions_sante|default:"35" }}</div>
+        <div class="metric-label small text-muted">Sessions santé</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="metric-box p-3 rounded-4 text-center h-100">
+        <div class="metric-value">{{ metrics.actions_environnement|default:"18" }}</div>
+        <div class="metric-label small text-muted">Actions environnement</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="metric-box p-3 rounded-4 text-center h-100">
+        <div class="metric-value">{{ metrics.zones_intervention|default:"5" }}</div>
+        <div class="metric-label small text-muted">Zones d'intervention</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-5" id="soutenir" data-aos="fade-up" data-aos-delay="110">
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="support-panel p-4 rounded-4 h-100">
+        <h3 class="h5 fw-semibold mb-3">Méthodes de soutien</h3>
+        <p class="small text-muted mb-3">Choisissez le canal qui vous convient pour collaborer, financer un programme ou initier un partenariat stratégique.</p>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="channel-box p-3 h-100 rounded-4">
+              <div class="d-flex align-items-start">
+                <span class="channel-icon me-2"><i class="fa fa-envelope"></i></span>
+                <div>
+                  <h6 class="mb-1">Email direct</h6>
+                  <p class="tiny mb-1 text-muted">Propositions, partenariats, mécénat.</p>
+                  <a href="mailto:enfantsenjoie@gmail.com" class="badge bg-primary-subtle text-primary fw-normal tiny">Envoyez un mail</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="channel-box p-3 h-100 rounded-4">
+              <div class="d-flex align-items-start">
+                <span class="channel-icon me-2"><i class="fab fa-whatsapp"></i></span>
+                <div>
+                  <h6 class="mb-1">WhatsApp</h6>
+                  <p class="tiny mb-1 text-muted">Questions rapides, échanges opérationnels.</p>
+                  <div><a  href="https://wa.me/+2290191264949" class="badge bg-primary-subtle text-primary fw-normal tiny">Envoyez un message</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="channel-box p-3 h-100 rounded-4">
+              <div class="d-flex align-items-start">
+                <span class="channel-icon me-2"><i class="fa fa-handshake"></i></span>
+                <div>
+                  <h6 class="mb-1">Partenariats</h6>
+                  <p class="tiny mb-1 text-muted">Institutions, fondations, entreprises.</p>
+                  <a href="mailto:enfantsenjoie@gmail.com" class="badge bg-primary-subtle text-primary fw-normal tiny">Discutons</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="channel-box p-3 h-100 rounded-4">
+              <div class="d-flex align-items-start">
+                <span class="channel-icon me-2"><i class="fa fa-repeat"></i></span>
+                <div>
+                  <h6 class="mb-1">Soutien récurrent</h6>
+                  <p class="tiny mb-1 text-muted">Don mensuel pour stabilité des actions.</p>
+                  <form method="post" action="{% url 'payments:start' %}" class="d-flex align-items-center gap-2 flex-wrap" style="max-width:260px;">
+                    {% csrf_token %}
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text">XOF</span>
+                      <input name="amount" type="number" inputmode="numeric" min="100" step="50" placeholder="Montant libre" class="form-control form-control-sm" required>
+                    </div>
+                    <button type="submit" class="btn btn-accent btn-sm">Faire un don</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="cta-box p-4 rounded-4 h-100 text-center d-flex flex-column justify-content-center">
+        <h4 class="fw-bold mb-2">Créer un effet durable</h4>
+        <p class="small text-muted mb-3">Vous souhaitez parrainer une action spécifique ou co-développer un programme ? Entrons en dialogue.</p>
+        <a href="mailto:enfantsenjoie@gmail.com" class="btn btn-outline-accent btn-sm px-4 d-block mx-auto col-lg-5"><i class="fa fa-paper-plane me-2"></i>Entrer en contact</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-center small text-muted" data-aos="fade-up" data-aos-delay="140">
+  Transparence : sur demande, nous partageons rapports synthétiques d'activités et indicateurs sociaux clés.
+</div>
+
+{% endblock %}

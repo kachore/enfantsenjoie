@@ -1,0 +1,116 @@
+{% extends 'website/base.html' %}
+{% load responsive_images %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container">
+    <h1 class="display-6 fw-bold mb-2">Actualités & Événements</h1>
+    <p class="lead mb-0">Suivez nos actions, initiatives et prochaines dates.</p>
+  </div>
+</section>
+{% endblock %}
+{% block content %}
+  {% if categories %}
+    <div class="mb-3 d-flex flex-wrap gap-2 align-items-center">
+      <span class="small text-muted me-1">Catégories:</span>
+      <a href="/actualites/{% if active_type %}?t={{ active_type }}{% endif %}"
+         class="badge rounded-pill {% if not active_category %}bg-primary text-light{% else %}bg-light text-dark border{% endif %}">Toutes</a>
+      {% for c in categories %}
+        {# Conserver t/f dans l'URL lors du changement de catégorie #}
+        <a href="/actualites/?cat={{ c.slug }}{% if active_type %}&amp;t={{ active_type }}{% endif %}{% if active_filter %}&amp;f={{ active_filter }}{% endif %}"
+           class="badge rounded-pill {% if active_category_slug == c.slug %}bg-primary text-light{% else %}bg-light text-dark border{% endif %}">{{ c.name }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if active_category %}
+    <div class="alert alert-light border d-flex align-items-center justify-content-between" role="status">
+      <div>
+        <i class="fa fa-filter me-2 text-primary"></i>
+        <strong>Catégorie:</strong> {{ active_category }}
+      </div>
+      <div>
+        <a href="/actualites/" class="small text-decoration-none"><i class="fa fa-times me-1"></i>Réinitialiser</a>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row g-4" data-aos="fade-up">
+    {% for it in items %}
+      <div class="col-md-4">
+  <div class="news-card h-100 position-relative overflow-hidden rounded-4 border d-flex flex-column">
+          <div class="ratio ratio-16x9 position-relative">
+            {% if it.slides and it.slides|length > 0 %}
+              <div id="cardCarousel-{{ forloop.counter0 }}" class="carousel slide h-100" data-bs-ride="false">
+                <div class="carousel-inner h-100">
+                  {% for s in it.slides %}
+                    <div class="carousel-item h-100 {% if forloop.first %}active{% endif %}">
+                      {% if s.type == 'image' %}
+                        <img src="{{ s.url }}" alt="{{ it.title }}" class="d-block w-100 h-100 object-fit-cover">
+                      {% elif s.type == 'video' %}
+                        <video class="w-100 h-100 object-fit-cover" preload="metadata" muted playsinline>
+                          <source src="{{ s.url }}" type="video/mp4">
+                          Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+                </div>
+                {% if it.slides|length > 1 %}
+                  <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel-{{ forloop.counter0 }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel-{{ forloop.counter0 }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                  </button>
+                {% endif %}
+              </div>
+              <div class="position-absolute top-0 start-0 w-100 h-100 fade-overlay" style="background:linear-gradient(to top,rgba(0,0,0,.20),rgba(0,0,0,.02)); mix-blend-mode:normal;"></div>
+            {% else %}
+              <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted small">Aucun visuel</div>
+            {% endif %}
+            <span class="fw-normal position-absolute m-3">{{ it.type|title }}</span>
+            {# Le badge statut sera affiché dans le pied de carte, pas en overlay sur l'image #}
+          </div>
+          <div class="pt-3 px-3 d-flex flex-column flex-grow-1 position-relative">
+            <h5 class="fw-semibold fs-6 mb-2 line-clamp-2" style="min-height:2.6em;">{{ it.title }}</h5>
+            <p class="tiny text-muted mb-2"><i class="fa fa-calendar me-1"></i>
+              {% if it.type == 'event' %}
+                {% if it.date and it.date_end %}
+                  {{ it.date|date:"d/m/Y H:i" }} → {{ it.date_end|date:"d/m/Y H:i" }}
+                {% elif it.date %}
+                  {{ it.date|date:"d/m/Y H:i" }}
+                {% endif %}
+              {% else %}
+                {{ it.date|date:"d/m/Y" }}
+              {% endif %}
+            </p>
+            <a href="/actualites/{{ it.slug }}/" class="stretched-link"></a>
+            <div class="event-card-footer mt-auto pb-3">
+              {% if it.type == 'event' and it.location %}
+                <div class="tiny text-muted mb-1"><i class="fa fa-location-dot me-1"></i>{{ it.location }}</div>
+              {% endif %}
+              <div class="d-flex align-items-center">
+                <a href="/actualites/{{ it.slug }}/" class="btn btn-sm btn-outline-primary">Voir</a>
+                {% if it.type == 'event' and it.status %}
+                  <span class="ms-auto">
+                    {% if it.status == 'En cours' %}
+                      <span class="status-badge badge rounded-pill" style="background:#16a34a; color:#fff; font-size:.75rem;">{{ it.status }}</span>
+                    {% elif it.status == 'Terminé' %}
+                      <span class="status-badge badge rounded-pill" style="background:#800020; color:#fff; font-size:.75rem;">{{ it.status }}</span>
+                    {% elif it.status == 'À venir' %}
+                      <span class="status-badge badge rounded-pill" style="background:#0d6efd; color:#fff; font-size:.75rem;">{{ it.status }}</span>
+                    {% else %}
+                      <span class="status-badge badge rounded-pill" style="background:rgba(0,0,0,.65); color:#fff; font-size:.75rem;">{{ it.status }}</span>
+                    {% endif %}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-muted">Aucune actualité.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

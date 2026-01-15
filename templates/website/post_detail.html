@@ -1,0 +1,188 @@
+{% extends 'website/base.html' %}
+{% load responsive_images %}
+{% block hero %}
+<section class="hero text-center" data-aos="fade-up">
+  <div class="container">
+    <h1 class="h2 fw-bold mb-3">{{ item.title }}
+      {% if item.type == 'event' and item.event_status %}
+        <span class="badge rounded-pill ms-2" style="background:rgba(0,0,0,.65); color:#fff; font-size:.65em; vertical-align:middle;">{{ item.event_status }}</span>
+      {% endif %}
+    </h1>
+    <div class="d-flex flex-wrap justify-content-center gap-3 small meta-bar">
+      <span><i class="fa fa-calendar me-1"></i>
+        {% if item.type == 'event' %}
+          {% if item.event_start and item.event_end %}
+            {{ item.event_start|date:"d/m/Y H:i" }} → {{ item.event_end|date:"d/m/Y H:i" }}
+          {% elif item.event_start %}
+            {{ item.event_start|date:"d/m/Y H:i" }}
+          {% elif item.date_event %}
+            {{ item.date_event|date:"d/m/Y H:i" }}
+          {% else %}
+            {{ item_date|date:"d/m/Y" }}
+          {% endif %}
+        {% else %}
+          {{ item_date|date:"d/m/Y" }}
+        {% endif %}
+      </span>
+      {% if item.type == 'event' and item.location %}<span class="text-muted"><i class="fa fa-location-dot me-1"></i>{{ item.location }}</span>{% endif %}
+      <span class="badge rounded-pill {% if item.type == 'event' %}bg-warning-subtle text-warning{% else %}bg-primary-subtle text-primary{% endif %}">{{ item.type|title }}</span>
+      <span><i class="fa fa-clock me-1"></i>{{ read_time }} min de lecture</span>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+  (function(){
+    // Copy buttons with visual feedback
+    function flashTooltip(el, text){
+      const prev = el.getAttribute('data-original-title') || el.title;
+      el.setAttribute('data-original-title', prev);
+      el.title = text;
+      el.classList.add('copied');
+      setTimeout(()=>{ el.title = prev || 'Copier le lien'; el.classList.remove('copied'); }, 1600);
+    }
+    const copy = (str) => navigator.clipboard.writeText(str).catch(()=>{});
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', ()=>{
+        copy(btn.getAttribute('data-copy'));
+        flashTooltip(btn, 'Copié !');
+      });
+    });
+    // TOC mobile toggle
+    const toc = document.getElementById('postToc');
+    const toggle = document.getElementById('tocToggle');
+    if(toc && toggle){
+      const update = () => {
+        const expanded = toggle.getAttribute('aria-expanded') === 'true';
+        if(expanded){ toc.classList.remove('collapsed'); toggle.textContent='Fermer'; }
+        else { toc.classList.add('collapsed'); toggle.textContent='Ouvrir'; }
+      };
+      toggle.addEventListener('click', ()=>{
+        toggle.setAttribute('aria-expanded', toggle.getAttribute('aria-expanded') === 'true' ? 'false':'true');
+        update();
+      });
+      update();
+    }
+  })();
+</script>
+{% endblock %}
+{% block content %}
+<div class="post-detail-grid" data-aos="fade-up" data-aos-delay="50">
+  <div class="post-media">
+    {% if slides and slides|length > 0 %}
+      <div id="postMediaCarousel" class="carousel slide rounded-4 overflow-hidden shadow-sm" data-bs-ride="false">
+        <div class="carousel-inner">
+          {% for s in slides %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+              {% if s.type == 'image' %}
+                <img src="{{ s.url }}" alt="{{ item.title }}" class="d-block w-100 object-fit-cover" style="aspect-ratio:16/9;">
+              {% elif s.type == 'video' %}
+                <div class="ratio ratio-16x9 bg-black">
+                  <video class="w-100 h-100" controls playsinline preload="metadata">
+                    <source src="{{ s.url }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture vidéo.
+                  </video>
+                </div>
+              {% endif %}
+              {% if s.caption %}
+                <div class="carousel-caption d-none d-md-block">
+                  <p class="small bg-dark bg-opacity-50 rounded px-2 py-1">{{ s.caption }}</p>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        {% if slides|length > 1 %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#postMediaCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#postMediaCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+          </button>
+        {% endif %}
+        {% if slides|length > 1 %}
+          <div class="carousel-indicators">
+            {% for s in slides %}
+              <button type="button" data-bs-target="#postMediaCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Slide {{ forloop.counter }}"></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="post-placeholder d-flex align-items-center justify-content-center rounded-4 shadow-sm">
+        <div class="text-center small text-muted">
+          <i class="fa fa-image mb-2 d-block fs-3 opacity-50"></i>Aucune image
+        </div>
+      </div>
+    {% endif %}
+    <div class="share-box d-none d-lg-block small mt-4">
+      <div class="fw-semibold mb-2">Partager</div>
+      <div class="d-flex gap-2">
+        <a target="_blank" class="share-icon" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" aria-label="Partager Facebook"><i class="fab fa-facebook"></i></a>
+        <a target="_blank" class="share-icon" rel="noopener" href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}" aria-label="Partager LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <button type="button" class="share-icon copy-btn" data-copy="{{ request.build_absolute_uri }}" aria-label="Copier le lien" title="Copier le lien"><i class="fa fa-link"></i></button>
+        <a href="/actualites/" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i>Retour</a>
+  <a href="/donner/" class="btn btn-accent btn-sm"><i class="fa fa-heart me-1"></i>Soutenir</a>
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <div class="post-actions d-flex flex-wrap gap-2 mb-3 align-items-center">
+      <div class="ms-auto d-flex gap-2 d-lg-none small align-items-center">
+        <span class="text-muted">Partager:</span>
+        <a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" aria-label="Partager Facebook"><i class="fab fa-facebook"></i></a>
+        <a target="_blank" rel="noopener" href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}" aria-label="Partager LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <button type="button" class="copy-inline small btn btn-outline-secondary py-0 px-2" data-copy="{{ request.build_absolute_uri }}" aria-label="Copier le lien" title="Copier le lien"><i class="fa fa-link"></i></button>
+      </div>
+    </div>
+    {% if toc %}
+      <nav class="post-toc mb-4 small collapsed" id="postToc">
+        <div class="toc-title fw-semibold">Sommaire</div>
+        <button type="button" class="post-toc-toggle btn btn-sm btn-light" id="tocToggle" aria-expanded="false" aria-controls="postToc">Ouvrir</button>
+        <ul class="list-unstyled mb-0">
+          {% for h in toc %}
+            <li class="toc-item level-{{ h.level }} mb-1"><a href="#{{ h.id }}" class="text-decoration-none">{{ h.text }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+    {% if article_html %}
+      <article class="post-body mb-4">{{ article_html|safe }}</article>
+    {% elif item.content %}
+      <article class="post-body mb-4">{{ item.content|linebreaks }}</article>
+    {% else %}
+      <p class="text-muted">(Pas de contenu détaillé)</p>
+    {% endif %}
+
+    <div class="post-nav d-flex justify-content-between align-items-center gap-3 mt-4 pt-3 border-top">
+      <div class="prev-wrap small">
+        {% if prev_item %}<a href="{{ prev_item.get_absolute_url }}" class="text-decoration-none"><i class="fa fa-chevron-left me-1"></i>{{ prev_item.title|truncatechars:42 }}</a>{% endif %}
+      </div>
+      <div class="next-wrap ms-auto text-end small">
+        {% if next_item %}<a href="{{ next_item.get_absolute_url }}" class="text-decoration-none">{{ next_item.title|truncatechars:42 }}<i class="fa fa-chevron-right ms-1"></i></a>{% endif %}
+      </div>
+    </div>
+    {% if related %}
+      <div class="related-block mt-5">
+        <h5 class="fw-semibold mb-3" data-aos="fade-up">Autres contenus</h5>
+        <div class="row g-3" data-aos="fade-up" data-aos-delay="30">
+          {% for r in related %}
+          <div class="col-md-4">
+            <a href="/actualites/{{ r.slug }}/" class="text-decoration-none related-card d-block p-3 h-100 rounded-4 border small">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge {% if r.type == 'event' %}bg-warning-subtle text-warning{% else %}bg-primary-subtle text-primary{% endif %} tiny fw-normal">{{ r.type|title }}</span>
+              </div>
+              <h6 class="mb-1 fw-semibold line-clamp-2">{{ r.title }}</h6>
+              <p class="tiny text-muted mb-0">{{ r.date|date:"d/m/Y" }}</p>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
