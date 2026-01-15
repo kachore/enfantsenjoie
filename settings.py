@@ -8,10 +8,11 @@ SECRET_KEY = 'replace-this-with-a-secure-secret-in-production'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
+ 
     '.ngrok-free.dev',
     'zita-unestimated-noncomprehendingly.ngrok-free.dev',
+    'eejong.org',          
+    'www.eejong.org',
 ]
 
 INSTALLED_APPS = [
