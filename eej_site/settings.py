@@ -8,10 +8,10 @@ SECRET_KEY = 'replace-this-with-a-secure-secret-in-production'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '72.62.187.189',
+
     'eejong.org',
     'www.eejong.org',
-    '.ngrok-free.dev',
+
 ]
 
 
