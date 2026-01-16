@@ -7,7 +7,12 @@ SECRET_KEY = 'replace-this-with-a-secure-secret-in-production'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["72.62.187.189", "eejong.org"]
+ALLOWED_HOSTS = [
+    'eejong.org',
+    'www.eejong.org',
+    '.ngrok-free.dev',
+]
+
 
 
 INSTALLED_APPS = [
@@ -107,3 +112,4 @@ CSRF_COOKIE_HTTPONLY = True  # Empêche accès JS (bonne pratique)
 # FEDAPAY_MODE = os.environ.get('FEDAPAY_MODE', 'sandbox')
 
 # FEDAPAY_WEBHOOK_SECRET = os.environ.get('FEDAPAY_WEBHOOK_SECRET')
+
