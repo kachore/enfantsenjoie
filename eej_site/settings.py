@@ -5,14 +5,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'replace-this-with-a-secure-secret-in-production'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
+    'eejong.org',
+    'www.eejong.org',
     '.ngrok-free.dev',
-    'zita-unestimated-noncomprehendingly.ngrok-free.dev',
 ]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
