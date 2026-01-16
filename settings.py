@@ -5,15 +5,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'replace-this-with-a-secure-secret-in-production'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [
- 
-    '.ngrok-free.dev',
-    'zita-unestimated-noncomprehendingly.ngrok-free.dev',
-    'eejong.org',          
-    'www.eejong.org',
-]
+ALLOWED_HOSTS = ["72.62.187.189", "eejong.org"]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -110,4 +105,5 @@ CSRF_COOKIE_HTTPONLY = True  # Empêche accès JS (bonne pratique)
 # FEDAPAY_PUBLIC_KEY = os.environ.get('FEDAPAY_PUBLIC_KEY')
 # FEDAPAY_SECRET_KEY = os.environ.get('FEDAPAY_SECRET_KEY')
 # FEDAPAY_MODE = os.environ.get('FEDAPAY_MODE', 'sandbox')
+
 # FEDAPAY_WEBHOOK_SECRET = os.environ.get('FEDAPAY_WEBHOOK_SECRET')
